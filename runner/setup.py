@@ -14,7 +14,7 @@ def init_app() -> FastAPI:
     app = FastAPI()
     app.include_router(unit_api)
 
-    if os.getenv("POS_REPOSITORY_KIND", "memory") == "sqlite":
+    if os.getenv("WALLET_REPOSITORY_KIND", "memory") == "sqlite":
         db = Database(DATABASE_NAME, os.path.abspath(SQL_FILE))
         # db.initial()    Uncomment this if you want to create initial db
         app.state.units = UnitsDatabase(db.get_connection(), db.get_cursor())
