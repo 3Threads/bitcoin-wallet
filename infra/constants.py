@@ -4,3 +4,4 @@ SQL_FILE_TEST = "../infra/sqlite/start_up.sql"
 
 STARTING_BITCOIN_AMOUNT = 1
 WALLETS_LIMIT = 3
+TOKEN_HEX_BYTES_NUM = 32

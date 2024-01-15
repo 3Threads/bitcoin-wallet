@@ -3,9 +3,11 @@ from dataclasses import dataclass, field
 from typing import Protocol
 from uuid import UUID, uuid4
 
+from infra.constants import TOKEN_HEX_BYTES_NUM
+
 
 def generate_api_key():
-    return secrets.token_hex(32)
+    return secrets.token_hex(TOKEN_HEX_BYTES_NUM)
 
 
 @dataclass

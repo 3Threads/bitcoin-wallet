@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -17,8 +19,8 @@ class TransactionItem(BaseModel):
 
 
 class MakeTransactionItem(BaseModel):
-    from_address: str
-    to_address: str
+    from_address: UUID
+    to_address: UUID
     transaction_amount: float
 
 

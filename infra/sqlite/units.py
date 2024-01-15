@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from sqlite3 import Connection, Cursor, IntegrityError
 from uuid import UUID
 
-from core.errors import AlreadyExistError
+from core.errors import AlreadyExistError, DoesNotExistError
 from core.unit import Unit
 
 
