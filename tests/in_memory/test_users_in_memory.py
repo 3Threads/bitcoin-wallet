@@ -4,6 +4,7 @@ from unittest.mock import ANY
 import pytest
 
 from core.errors import InvalidApiKeyError
+from core.user import generate_api_key
 from infra.constants import TOKEN_HEX_BYTES_NUM
 from infra.in_memory.users import UsersInMemory
 
@@ -29,4 +30,4 @@ def test_invalid_api_key_in_memory() -> None:
     users = UsersInMemory()
 
     with pytest.raises(InvalidApiKeyError):
-        users.try_authorization(secrets.token_hex(TOKEN_HEX_BYTES_NUM))
+        users.try_authorization(generate_api_key())
