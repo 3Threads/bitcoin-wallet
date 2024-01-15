@@ -47,7 +47,7 @@ def create_wallet(
     responses={401: {"model": ErrorMessageEnvelope}, 404: {"model": ErrorMessageEnvelope}},
 )
 def read_wallet(
-        wallet_address: str, api_key: ApiKey, wallets: WalletRepositoryDependable
+        wallet_address: UUID, api_key: ApiKey, wallets: WalletRepositoryDependable
 ):
     try:
         return {"wallet": wallets.read(wallet_address, api_key)}
@@ -64,7 +64,7 @@ def read_wallet(
     responses={401: {"model": ErrorMessageEnvelope}},
 )
 def get_wallet_transactions(
-        address: str, api_key: ApiKey, transactions: TransactionRepositoryDependable,
+        address: UUID, api_key: ApiKey, transactions: TransactionRepositoryDependable,
         wallets: WalletRepositoryDependable
 ):
     try:

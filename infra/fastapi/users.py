@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter
 from pydantic import BaseModel
 
@@ -8,6 +10,7 @@ users_api = APIRouter(tags=["Users"])
 
 
 class UserItem(BaseModel):
+    id: UUID
     api_key: str
 
 

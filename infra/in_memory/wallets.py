@@ -10,30 +10,28 @@ from infra.in_memory.users import UserInMemory
 @dataclass
 class WalletsInMemory:
     users: UserInMemory
-    wallets: dict[str, list[Wallet]] = field(default_factory=dict)
+    wallets: dict[UUID, Wallet] = field(default_factory=dict)
 
     def create(self, api_key: str) -> Wallet:
-        self.users.try_authorization(api_key)
+        user = self.users.try_authorization(api_key)
 
-        wallet = Wallet()
-        try:
-            if len(self.wallets[api_key]) < WALLETS_LIMIT:
-                self.wallets[api_key].append(wallet)
-            else:
-                raise WalletsLimitError(api_key)
+        wallet = Wallet(user.id)
 
-        except KeyError:
-            self.wallets[api_key] = [wallet]
+        users_wallets_num = 0
+        for curr_wallet in self.wallets.values():
+            if curr_wallet.user_id == user.id:
+                users_wallets_num += 1
+
+        if users_wallets_num < WALLETS_LIMIT:
+            self.wallets[wallet.address] = wallet
+        else:
+            raise WalletsLimitError(api_key)
 
         return wallet
 
     def read(self, address: UUID, api_key: str) -> Wallet:
         self.users.try_authorization(api_key)
-
         try:
-            for wallet in self.wallets[api_key]:
-                if str(wallet.address) == str(address):
-                    return wallet
-            raise DoesNotExistError("Wallet", "Address", str(address))
+            return self.wallets[address]
         except KeyError:
             raise DoesNotExistError("Wallet", "Address", str(address))

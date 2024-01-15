@@ -1,6 +1,7 @@
 import secrets
 from dataclasses import dataclass, field
 from typing import Protocol
+from uuid import UUID, uuid4
 
 
 def generate_api_key():
@@ -9,6 +10,7 @@ def generate_api_key():
 
 @dataclass
 class User:
+    id: UUID = field(default_factory=uuid4)
     api_key: str = field(default_factory=generate_api_key)
 
 

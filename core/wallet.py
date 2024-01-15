@@ -7,6 +7,7 @@ from infra.constants import STARTING_BITCOIN_AMOUNT
 
 @dataclass
 class Wallet:
+    user_id: UUID
     address: UUID = field(default_factory=uuid4)
     balance: float = STARTING_BITCOIN_AMOUNT
 
