@@ -3,7 +3,8 @@ from uuid import UUID
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from core.errors import ErrorMessageEnvelope, WalletsLimitError, InvalidApiKeyError, DoesNotExistError
+from core.errors import ErrorMessageEnvelope, WalletsLimitError, InvalidApiKeyError, DoesNotExistError, \
+    WalletPermissionError
 from infra.fastapi.dependables import ApiKey, WalletRepositoryDependable, TransactionRepositoryDependable
 from infra.fastapi.transactions import TransactionsListEnvelope
 
@@ -55,6 +56,8 @@ def read_wallet(
         return e.get_error_json_response(401)
     except DoesNotExistError as e:
         return e.get_error_json_response(404)
+    except WalletPermissionError as e:
+        return e.get_error_json_response(404)
 
 
 @wallets_api.get(
@@ -64,11 +67,14 @@ def read_wallet(
     responses={401: {"model": ErrorMessageEnvelope}},
 )
 def get_wallet_transactions(
-        address: UUID, api_key: ApiKey, transactions: TransactionRepositoryDependable,
-        wallets: WalletRepositoryDependable
+        address: UUID, api_key: ApiKey, transactions: TransactionRepositoryDependable
 ):
     try:
-        transactions = transactions.get_wallet_transactions(api_key, wallets.read(api_key, address))
+        transactions = transactions.get_wallet_transactions(api_key, address)
         return {"transactions": transactions}
     except InvalidApiKeyError as e:
         return e.get_error_json_response(401)
+    except DoesNotExistError as e:
+        return e.get_error_json_response(404)
+    except WalletPermissionError as e:
+        return e.get_error_json_response(404)

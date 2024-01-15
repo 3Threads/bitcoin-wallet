@@ -4,7 +4,6 @@ from pydantic import BaseModel
 
 from core.errors import ErrorMessageEnvelope
 from core.transaction import Transaction
-from core.unit import Unit
 from infra.fastapi.dependables import ApiKey, TransactionRepositoryDependable
 
 transactions_api = APIRouter(tags=["Transactions"])
@@ -20,7 +19,7 @@ class TransactionItem(BaseModel):
 class MakeTransactionItem(BaseModel):
     from_address: str
     to_address: str
-    btc_amount: float
+    transaction_amount: float
 
 
 class TransactionItemEnvelope(BaseModel):

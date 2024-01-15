@@ -6,7 +6,7 @@ from core.user import User
 
 
 @dataclass
-class UserInMemory:
+class UsersInMemory:
     users: dict[UUID, User] = field(default_factory=dict)
 
     def create(self) -> User:
