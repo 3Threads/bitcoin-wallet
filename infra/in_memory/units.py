@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from uuid import UUID
 
-from core.errors import AlreadyExistError
+from core.errors import AlreadyExistError, DoesNotExistError
 from core.unit import Unit
 
 

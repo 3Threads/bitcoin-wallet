@@ -8,7 +8,7 @@ from core.errors import ErrorMessageEnvelope, WalletsLimitError, ApiKeyDoesNotEx
 from infra.fastapi.dependables import ApiKey, WalletRepositoryDependable, TransactionRepositoryDependable
 from infra.fastapi.transactions import TransactionsListEnvelope
 
-wallet_api = APIRouter(tags=["Wallets"])
+wallets_api = APIRouter(tags=["Wallets"])
 
 
 class WalletItem(BaseModel):
@@ -25,7 +25,7 @@ class WalletListEnvelope(BaseModel):
     wallets: list[WalletItem]
 
 
-@wallet_api.post(
+@wallets_api.post(
     "/wallets",
     status_code=201,
     response_model=WalletItemEnvelope,
@@ -42,7 +42,7 @@ def create_wallet(
         return e.get_error_json_response()
 
 
-@wallet_api.get(
+@wallets_api.get(
     "/wallets/{address}",
     status_code=201,
     response_model=WalletItemEnvelope,
@@ -58,7 +58,7 @@ def read_wallet(
     except AddressDoesNotExistError as e:
         return e.get_error_json_response(404)
 
-@wallet_api.get(
+@wallets_api.get(
     "/wallets/{address}/transactions",
     status_code=201,
     response_model=TransactionsListEnvelope,

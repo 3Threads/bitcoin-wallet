@@ -32,6 +32,24 @@ class AlreadyExistError(Exception):
 
 
 @dataclass
+class DoesNotExistError(Exception):
+    name: str
+    field: str
+    value: str
+
+    def get_error_json_response(self, code: int = 404) -> JSONResponse:
+        return JSONResponse(
+            status_code=code,
+            content={
+                "error": {
+                    "message": f"{self.name} with {self.field}<{self.value}>"
+                               f" does not exist."
+                }
+            },
+        )
+
+
+@dataclass
 class ApiKeyDoesNotExistError(Exception):
     api_key: str
 

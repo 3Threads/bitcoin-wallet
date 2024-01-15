@@ -1,12 +1,8 @@
-from uuid import UUID
-
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from core.errors import ErrorMessageEnvelope, AlreadyExistError
-from core.unit import Unit
-from infra.fastapi.dependables import UnitRepositoryDependable, UserRepositoryDependable
+from core.user import User
+from infra.fastapi.dependables import UserRepositoryDependable
 
 users_api = APIRouter(tags=["Users"])
 
@@ -22,13 +18,9 @@ class UserItemEnvelope(BaseModel):
 @users_api.post(
     "/users",
     status_code=201,
-    response_model=UserItemEnvelope,
-    responses={409: {"model": ErrorMessageEnvelope}},
+    response_model=UserItemEnvelope
 )
-def create_unit(
+def register_user(
         users: UserRepositoryDependable
-) -> dict[str, Unit] | JSONResponse:
-    try:
-        return {"user": users.create()}
-    except AlreadyExistError as e:
-        return e.get_error_json_response(409)
+) -> dict[str, User]:
+    return {"user": users.create()}

@@ -1,19 +1,20 @@
 from dataclasses import dataclass, field
 
-from core.errors import AlreadyExistError
-import secrets
+from core.errors import DoesNotExistError
+from core.user import User
 
 
 @dataclass
 class UserInMemory:
-    keys: set = field(default_factory=set)
+    users: dict[str, User] = field(default_factory=dict)
 
-    def create(self, api_key: str = secrets.token_hex(32)) -> None:
-        if api_key in self.keys:
-            raise AlreadyExistError("User", "API_KEY", api_key)
-        self.keys.add(api_key)
+    def create(self) -> User:
+        user = User()
+        self.users[user.api_key] = user
+        return user
 
-    def check_key(self, api_key: str) -> bool:
-        if api_key in self.keys:
-            return True
-        return False
+    def get_user(self, api_key: str) -> User:
+        try:
+            return self.users[api_key]
+        except KeyError:
+            raise DoesNotExistError("User", "API_KEY", api_key)
