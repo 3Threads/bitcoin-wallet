@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from core.errors import DoesNotExistError
+from core.errors import DoesNotExistError, InvalidApiKeyError
 from core.user import User
 
 
@@ -13,8 +13,8 @@ class UserInMemory:
         self.users[user.api_key] = user
         return user
 
-    def get_user(self, api_key: str) -> User:
+    def try_authorization(self, api_key: str) -> User:
         try:
             return self.users[api_key]
         except KeyError:
-            raise DoesNotExistError("User", "API_KEY", api_key)
+            raise InvalidApiKeyError(api_key)

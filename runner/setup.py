@@ -30,7 +30,7 @@ def init_app() -> FastAPI:
     else:
         app.state.units = UnitsInMemory()
         app.state.users = UserInMemory()
-        app.state.wallets = WalletsInMemory()
+        app.state.wallets = WalletsInMemory(app.state.users)
         app.state.transactions = TransactionInMemory()
 
     return app

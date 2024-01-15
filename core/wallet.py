@@ -2,12 +2,13 @@ from dataclasses import dataclass, field
 from typing import Protocol
 from uuid import UUID, uuid4
 
+from infra.constants import STARTING_BITCOIN_AMOUNT
+
 
 @dataclass
 class Wallet:
-    user_api_key: str
-    address: UUID
-    balance: float
+    address: UUID = field(default_factory=uuid4)
+    balance: float = STARTING_BITCOIN_AMOUNT
 
 
 class WalletRepository(Protocol):

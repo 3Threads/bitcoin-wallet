@@ -16,5 +16,5 @@ class UserRepository(Protocol):
     def create(self) -> User:
         pass
 
-    def get_user(self, api_key: str) -> User:
+    def try_authorization(self, api_key: str) -> User:
         pass
