@@ -48,10 +48,10 @@ def create_wallet(
     responses={401: {"model": ErrorMessageEnvelope}, 404: {"model": ErrorMessageEnvelope}},
 )
 def read_wallet(
-        wallet_address: UUID, api_key: ApiKey, wallets: WalletRepositoryDependable
+        address: UUID, api_key: ApiKey, wallets: WalletRepositoryDependable
 ):
     try:
-        return {"wallet": wallets.read(wallet_address, api_key)}
+        return {"wallet": wallets.read(address, api_key)}
     except InvalidApiKeyError as e:
         return e.get_error_json_response(401)
     except DoesNotExistError as e:

@@ -37,4 +37,4 @@ class WalletsInMemory:
                 raise WalletPermissionError(address)
             return wallet
         except KeyError:
-            raise DoesNotExistError("Wallet", "Address", str(address))
+            raise DoesNotExistError("Wallet", "address", str(address))
