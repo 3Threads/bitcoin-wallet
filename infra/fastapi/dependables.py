@@ -6,6 +6,7 @@ from fastapi.requests import Request
 from core.transaction import TransactionRepository
 from core.unit import UnitRepository
 from core.wallet import WalletRepository
+from core.user import UserRepository
 
 
 def get_unit_repository(request: Request) -> UnitRepository:
@@ -15,17 +16,24 @@ def get_unit_repository(request: Request) -> UnitRepository:
 UnitRepositoryDependable = Annotated[UnitRepository, Depends(get_unit_repository)]
 
 
-def get_transaction_repository(request: Request) -> TransactionRepository:
-    return request.app.state.transactions  # type: ignore
+def get_user_repository(request: Request) -> UserRepository:
+    return request.app.state.users  # type: ignore
 
 
-TransactionRepositoryDependable = Annotated[TransactionRepository, Depends(get_transaction_repository)]
+UserRepositoryDependable = Annotated[UserRepository, Depends(get_user_repository)]
+
+ApiKey = Annotated[str, Header(convert_underscores=False)]
 
 
 def get_wallet_repository(request: Request) -> WalletRepository:
     return request.app.state.wallets  # type: ignore
 
 
-WalletRepositoryDependable = Annotated[WalletRepository, Depends(get_wallet_repository())]
+WalletRepositoryDependable = Annotated[WalletRepository, Depends(get_wallet_repository)]
 
-ApiKey = Annotated[str, Header(convert_underscores=False)]
+
+def get_transaction_repository(request: Request) -> TransactionRepository:
+    return request.app.state.transactions  # type: ignore
+
+
+TransactionRepositoryDependable = Annotated[TransactionRepository, Depends(get_transaction_repository)]
