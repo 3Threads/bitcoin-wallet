@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from uuid import UUID
 
-from core.errors import NotEnoughBitcoinError
+from core.errors import NotEnoughBitcoinError, TransactionBetweenSameWalletError
 from core.transaction import Transaction
 from infra.in_memory.users import UsersInMemory
 from infra.in_memory.wallets import WalletsInMemory
@@ -15,6 +15,9 @@ class TransactionsInMemory:
 
     def make_transaction(self, from_api_key: str, from_address: UUID, to_address: UUID,
                          transaction_amount: float) -> Transaction:
+        if from_address == to_address:
+            raise TransactionBetweenSameWalletError()
+
         from_wallet = self.wallets.read(from_address, from_api_key)
         to_wallet = self.wallets.read(to_address, from_api_key, False)
 

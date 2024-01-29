@@ -126,3 +126,16 @@ class NotEnoughBitcoinError(Exception):
                 }
             },
         )
+
+
+@dataclass
+class TransactionBetweenSameWalletError(Exception):
+    def get_error_json_response(self, code: int = 404) -> JSONResponse:
+        return JSONResponse(
+            status_code=code,
+            content={
+                "error": {
+                    f"message": f"Transaction between one wallet is restricted."
+                }
+            },
+        )

@@ -1,12 +1,10 @@
-from unittest.mock import ANY
 from uuid import uuid4
 
 import pytest
 
-from core.errors import DoesNotExistError, WalletsLimitError, InvalidApiKeyError, \
-    WalletPermissionError, NotEnoughBitcoinError
+from core.errors import DoesNotExistError, InvalidApiKeyError, \
+    WalletPermissionError, NotEnoughBitcoinError, TransactionBetweenSameWalletError
 from core.user import generate_api_key
-from infra.constants import STARTING_BITCOIN_AMOUNT, WALLETS_LIMIT
 from infra.in_memory.transactions import TransactionsInMemory
 from infra.in_memory.users import UsersInMemory
 from infra.in_memory.wallets import WalletsInMemory
@@ -62,6 +60,18 @@ def test_make_transaction_without_enough_balance_in_memory() -> None:
     transactions = TransactionsInMemory(users, wallets)
     with pytest.raises(NotEnoughBitcoinError):
         transactions.make_transaction(user.api_key, from_wallet.address, to_wallet.address, 1.5)
+
+
+def test_make_transaction_between_same_wallet_in_memory() -> None:
+    users = UsersInMemory()
+    user = users.create()
+
+    wallets = WalletsInMemory(users)
+    wallet = wallets.create(user.api_key)
+
+    transactions = TransactionsInMemory(users, wallets)
+    with pytest.raises(TransactionBetweenSameWalletError):
+        transactions.make_transaction(user.api_key, wallet.address, wallet.address, 0.5)
 
 
 def test_make_transaction_other_api_key_in_memory() -> None:
