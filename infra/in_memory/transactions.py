@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from uuid import UUID
 
+from core.errors import NotEnoughBitcoinError
 from core.transaction import Transaction
 from infra.in_memory.users import UsersInMemory
 from infra.in_memory.wallets import WalletsInMemory
@@ -16,6 +17,9 @@ class TransactionsInMemory:
                          transaction_amount: float) -> Transaction:
         from_wallet = self.wallets.read(from_address, from_api_key)
         to_wallet = self.wallets.read(to_address, from_api_key, False)
+
+        if from_wallet.balance < transaction_amount:
+            raise NotEnoughBitcoinError(from_address)
 
         from_wallet.balance -= transaction_amount
         to_wallet.balance += transaction_amount

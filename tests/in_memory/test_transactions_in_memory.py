@@ -4,7 +4,7 @@ from uuid import uuid4
 import pytest
 
 from core.errors import DoesNotExistError, WalletsLimitError, InvalidApiKeyError, \
-    WalletPermissionError
+    WalletPermissionError, NotEnoughBitcoinError
 from core.user import generate_api_key
 from infra.constants import STARTING_BITCOIN_AMOUNT, WALLETS_LIMIT
 from infra.in_memory.transactions import TransactionsInMemory
@@ -49,6 +49,19 @@ def test_make_transaction_between_two_users_in_memory() -> None:
     assert transaction.transaction_fee == 0.015
     assert from_wallet.balance == 0
     assert to_wallet.balance == 1.985
+
+
+def test_make_transaction_without_enough_balance_in_memory() -> None:
+    users = UsersInMemory()
+    user = users.create()
+
+    wallets = WalletsInMemory(users)
+    from_wallet = wallets.create(user.api_key)
+    to_wallet = wallets.create(user.api_key)
+
+    transactions = TransactionsInMemory(users, wallets)
+    with pytest.raises(NotEnoughBitcoinError):
+        transactions.make_transaction(user.api_key, from_wallet.address, to_wallet.address, 1.5)
 
 
 def test_make_transaction_other_api_key_in_memory() -> None:

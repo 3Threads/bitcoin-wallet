@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Protocol
 from uuid import UUID
 
 from fastapi.responses import JSONResponse
@@ -109,6 +108,21 @@ class WalletPermissionError(Exception):
             content={
                 "error": {
                     f"message": f"User does not have wallet<{self.wallet_address}>."
+                }
+            },
+        )
+
+
+@dataclass
+class NotEnoughBitcoinError(Exception):
+    wallet_address: UUID
+
+    def get_error_json_response(self, code: int = 404) -> JSONResponse:
+        return JSONResponse(
+            status_code=code,
+            content={
+                "error": {
+                    f"message": f"Not enough bitcoin on the wallet with address<{self.wallet_address}>."
                 }
             },
         )
