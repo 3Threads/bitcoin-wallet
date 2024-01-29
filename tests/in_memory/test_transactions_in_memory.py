@@ -119,3 +119,52 @@ def test_read_all_transactions_unknown_api_key_in_memory() -> None:
 
     with pytest.raises(InvalidApiKeyError):
         transactions.read_all(generate_api_key())
+
+
+def test_get_wallet_transactions_unknown_api_key_in_memory() -> None:
+    users = UsersInMemory()
+
+    wallets = WalletsInMemory(users)
+
+    transactions = TransactionsInMemory(users, wallets)
+
+    with pytest.raises(InvalidApiKeyError):
+        transactions.get_wallet_transactions(generate_api_key(), uuid4())
+
+
+def test_get_wallet_transactions_unknown_wallet_address_in_memory() -> None:
+    users = UsersInMemory()
+    wallets = WalletsInMemory(users)
+
+    transactions = TransactionsInMemory(users, wallets)
+
+    with pytest.raises(DoesNotExistError):
+        transactions.get_wallet_transactions(users.create().api_key, uuid4())
+
+
+def test_get_wallet_transactions_other_api_key_in_memory() -> None:
+    users = UsersInMemory()
+    user1 = users.create()
+    user2 = users.create()
+
+    wallets = WalletsInMemory(users)
+    transactions = TransactionsInMemory(users, wallets)
+
+    with pytest.raises(WalletPermissionError):
+        transactions.get_wallet_transactions(user2.api_key, wallets.create(user1.api_key).address)
+
+
+def test_get_wallet_transactions_in_memory() -> None:
+    users = UsersInMemory()
+    user1 = users.create()
+    user2 = users.create()
+
+    wallets = WalletsInMemory(users)
+    wallet1 = wallets.create(user1.api_key)
+    wallet2 = wallets.create(user2.api_key)
+
+    transactions = TransactionsInMemory(users, wallets)
+    transaction1 = transactions.make_transaction(user1.api_key, wallet1.address, wallet2.address, 0.5)
+    transaction2 = transactions.make_transaction(user2.api_key, wallet2.address, wallet1.address, 0.5)
+
+    assert transactions.get_wallet_transactions(user1.api_key, wallet1.address) == [transaction1, transaction2]
