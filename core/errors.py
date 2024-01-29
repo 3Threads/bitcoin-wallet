@@ -139,3 +139,18 @@ class TransactionBetweenSameWalletError(Exception):
                 }
             },
         )
+
+
+@dataclass
+class EmailAlreadyExistsError(Exception):
+    email: str
+
+    def get_error_json_response(self, code: int = 404) -> JSONResponse:
+        return JSONResponse(
+            status_code=code,
+            content={
+                "error": {
+                    f"message": f"The email: {self.email} already exists."
+                }
+            },
+        )

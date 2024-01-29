@@ -32,7 +32,7 @@ def test_make_transaction_in_memory() -> None:
 def test_make_transaction_between_two_users_in_memory() -> None:
     users = UsersInMemory()
     user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test@gmail.com")
+    user2 = users.create(email="test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     from_wallet = wallets.create(user1.api_key)
@@ -64,7 +64,7 @@ def test_make_transaction_without_enough_balance_in_memory() -> None:
 
 def test_make_transaction_between_same_wallet_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create()
+    user = users.create("test@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet = wallets.create(user.api_key)
@@ -77,7 +77,7 @@ def test_make_transaction_between_same_wallet_in_memory() -> None:
 def test_make_transaction_other_api_key_in_memory() -> None:
     users = UsersInMemory()
     user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test@gmail.com")
+    user2 = users.create(email="test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     transactions = TransactionsInMemory(users, wallets)
@@ -122,7 +122,7 @@ def test_read_all_transactions_empty_in_memory() -> None:
 def test_read_all_transactions_in_memory() -> None:
     users = UsersInMemory()
     user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test@gmail.com")
+    user2 = users.create(email="test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet1 = wallets.create(user1.api_key)
@@ -168,7 +168,7 @@ def test_get_wallet_transactions_unknown_wallet_address_in_memory() -> None:
 def test_get_wallet_transactions_other_api_key_in_memory() -> None:
     users = UsersInMemory()
     user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test@gmail.com")
+    user2 = users.create(email="test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     transactions = TransactionsInMemory(users, wallets)
@@ -180,7 +180,7 @@ def test_get_wallet_transactions_other_api_key_in_memory() -> None:
 def test_get_wallet_transactions_in_memory() -> None:
     users = UsersInMemory()
     user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test@gmail.com")
+    user2 = users.create(email="test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet1 = wallets.create(user1.api_key)

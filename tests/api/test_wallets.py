@@ -84,7 +84,7 @@ def test_should_not_read_with_invalid_key_wallet(client: TestClient) -> None:
 
 def test_should_not_read_others_wallet(client: TestClient) -> None:
     api_key1 = create_user_and_get_key(client)
-    api_key2 = create_user_and_get_key(client)
+    api_key2 = create_user_and_get_key(client, "test1@gmail.com")
 
     response = client.post("/wallets", headers={"api_key": api_key1})
     wallet_address = response.json()['wallet']['address']

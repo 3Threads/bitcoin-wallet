@@ -78,7 +78,7 @@ def test_read_unknown_wallet_in_memory() -> None:
 def test_read_others_wallet_in_memory() -> None:
     users = UsersInMemory()
     user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test@gmail.com")
+    user2 = users.create(email="test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet = wallets.create(user1.api_key)
@@ -90,7 +90,7 @@ def test_read_others_wallet_in_memory() -> None:
 def test_read_wallet_ignore_permission_in_memory() -> None:
     users = UsersInMemory()
     user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test@gmail.com")
+    user2 = users.create(email="test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet = wallets.create(user1.api_key)
