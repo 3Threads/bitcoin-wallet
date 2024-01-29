@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from core.errors import  DoesNotExistError
+from core.errors import DoesNotExistError
 
 
 def test_does_not_exist_error() -> None:

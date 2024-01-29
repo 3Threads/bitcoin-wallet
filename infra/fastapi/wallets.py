@@ -3,9 +3,18 @@ from uuid import UUID
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from core.errors import ErrorMessageEnvelope, WalletsLimitError, InvalidApiKeyError, DoesNotExistError, \
-    WalletPermissionError
-from infra.fastapi.dependables import ApiKey, WalletRepositoryDependable, TransactionRepositoryDependable
+from core.errors import (
+    DoesNotExistError,
+    ErrorMessageEnvelope,
+    InvalidApiKeyError,
+    WalletPermissionError,
+    WalletsLimitError,
+)
+from infra.fastapi.dependables import (
+    ApiKey,
+    TransactionRepositoryDependable,
+    WalletRepositoryDependable,
+)
 from infra.fastapi.transactions import TransactionsListEnvelope
 
 wallets_api = APIRouter(tags=["Wallets"])

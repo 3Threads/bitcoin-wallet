@@ -1,11 +1,9 @@
-import secrets
 from unittest.mock import ANY
 
 import pytest
 
-from core.errors import InvalidApiKeyError, EmailAlreadyExistError
+from core.errors import EmailAlreadyExistError, InvalidApiKeyError
 from core.user import generate_api_key
-from infra.constants import TOKEN_HEX_BYTES_NUM
 from infra.in_memory.users import UsersInMemory
 
 

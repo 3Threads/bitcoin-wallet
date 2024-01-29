@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from uuid import UUID
 
-from core.errors import InvalidApiKeyError, EmailAlreadyExistError
+from core.errors import EmailAlreadyExistError, InvalidApiKeyError
 from core.user import User
 
 

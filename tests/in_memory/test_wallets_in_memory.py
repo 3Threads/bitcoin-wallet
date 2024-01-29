@@ -1,10 +1,14 @@
 from unittest.mock import ANY
-from uuid import uuid4, UUID
+from uuid import uuid4
 
 import pytest
 
-from core.errors import DoesNotExistError, WalletsLimitError, InvalidApiKeyError, \
-    WalletPermissionError
+from core.errors import (
+    DoesNotExistError,
+    InvalidApiKeyError,
+    WalletPermissionError,
+    WalletsLimitError,
+)
 from core.user import generate_api_key
 from infra.constants import STARTING_BITCOIN_AMOUNT, WALLETS_LIMIT
 from infra.in_memory.users import UsersInMemory

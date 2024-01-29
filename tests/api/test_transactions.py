@@ -4,9 +4,11 @@ import pytest
 from fastapi.testclient import TestClient
 
 from core.user import generate_api_key
-
 from runner.setup import init_app
-from tests.api.fixture_fuctions import create_user_and_get_key, create_wallet_and_get_address
+from tests.api.fixture_fuctions import (
+    create_user_and_get_key,
+    create_wallet_and_get_address,
+)
 
 
 @pytest.fixture

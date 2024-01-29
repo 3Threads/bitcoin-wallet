@@ -4,7 +4,6 @@ from fastapi import FastAPI
 
 from infra.constants import DATABASE_NAME, SQL_FILE
 from infra.fastapi.transactions import transactions_api
-
 from infra.fastapi.users import users_api
 from infra.fastapi.wallets import wallets_api
 from infra.in_memory.transactions import TransactionsInMemory

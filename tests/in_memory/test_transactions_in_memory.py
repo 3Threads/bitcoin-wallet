@@ -2,8 +2,13 @@ from uuid import uuid4
 
 import pytest
 
-from core.errors import DoesNotExistError, InvalidApiKeyError, \
-    WalletPermissionError, NotEnoughBitcoinError, TransactionBetweenSameWalletError
+from core.errors import (
+    DoesNotExistError,
+    InvalidApiKeyError,
+    NotEnoughBitcoinError,
+    TransactionBetweenSameWalletError,
+    WalletPermissionError,
+)
 from core.user import generate_api_key
 from infra.in_memory.transactions import TransactionsInMemory
 from infra.in_memory.users import UsersInMemory

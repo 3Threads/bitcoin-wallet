@@ -4,8 +4,8 @@ from fastapi import Depends, Header
 from fastapi.requests import Request
 
 from core.transaction import TransactionRepository
-from core.wallet import WalletRepository
 from core.user import UserRepository
+from core.wallet import WalletRepository
 
 
 def get_user_repository(request: Request) -> UserRepository:

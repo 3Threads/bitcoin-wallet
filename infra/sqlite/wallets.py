@@ -2,7 +2,12 @@ from dataclasses import dataclass
 from sqlite3 import Connection, Cursor, IntegrityError
 from uuid import UUID
 
-from core.errors import WalletsLimitError, WalletPermissionError, DoesNotExistError, InvalidApiKeyError
+from core.errors import (
+    DoesNotExistError,
+    InvalidApiKeyError,
+    WalletPermissionError,
+    WalletsLimitError,
+)
 from core.wallet import Wallet
 from infra.constants import WALLETS_LIMIT
 from infra.sqlite.users import UsersDatabase

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from uuid import UUID
 
-from core.errors import WalletsLimitError, DoesNotExistError, WalletPermissionError
+from core.errors import DoesNotExistError, WalletPermissionError, WalletsLimitError
 from core.wallet import Wallet
 from infra.constants import WALLETS_LIMIT
 from infra.in_memory.users import UsersInMemory
