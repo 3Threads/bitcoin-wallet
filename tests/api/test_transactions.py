@@ -73,7 +73,7 @@ def test_make_transaction_same_wallet(client: TestClient) -> None:
 
 def test_make_transaction_with_other_wallet(client: TestClient) -> None:
     api_key1 = create_user_and_get_key(client)
-    api_key2 = create_user_and_get_key(client)
+    api_key2 = create_user_and_get_key(client, "test2@gmail.com")
     wallet_address1 = create_wallet_and_get_address(client, api_key1)
     wallet_address2 = create_wallet_and_get_address(client, api_key2)
 
