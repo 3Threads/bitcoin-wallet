@@ -28,7 +28,8 @@ class WalletListEnvelope(BaseModel):
     "/wallets",
     status_code=201,
     response_model=WalletItemEnvelope,
-    responses={401: {"model": ErrorMessageEnvelope}, 403: {"model": ErrorMessageEnvelope}},
+    responses={401: {"model": ErrorMessageEnvelope},
+               409: {"model": ErrorMessageEnvelope}},
 )
 def create_wallet(
         api_key: ApiKey, wallets: WalletRepositoryDependable
@@ -38,14 +39,16 @@ def create_wallet(
     except InvalidApiKeyError as e:
         return e.get_error_json_response(401)
     except WalletsLimitError as e:
-        return e.get_error_json_response(403)
+        return e.get_error_json_response(409)
 
 
 @wallets_api.get(
     "/wallets/{address}",
     status_code=200,
     response_model=WalletItemEnvelope,
-    responses={401: {"model": ErrorMessageEnvelope}, 404: {"model": ErrorMessageEnvelope}},
+    responses={401: {"model": ErrorMessageEnvelope},
+               403: {"model": ErrorMessageEnvelope},
+               404: {"model": ErrorMessageEnvelope}},
 )
 def read_wallet(
         address: UUID, api_key: ApiKey, wallets: WalletRepositoryDependable
@@ -57,14 +60,16 @@ def read_wallet(
     except DoesNotExistError as e:
         return e.get_error_json_response(404)
     except WalletPermissionError as e:
-        return e.get_error_json_response(404)
+        return e.get_error_json_response(403)
 
 
 @wallets_api.get(
     "/wallets/{address}/transactions",
     status_code=200,
     response_model=TransactionsListEnvelope,
-    responses={401: {"model": ErrorMessageEnvelope}},
+    responses={401: {"model": ErrorMessageEnvelope},
+               403: {"model": ErrorMessageEnvelope},
+               404: {"model": ErrorMessageEnvelope}},
 )
 def get_wallet_transactions(
         address: UUID, api_key: ApiKey, transactions: TransactionRepositoryDependable
@@ -77,4 +82,4 @@ def get_wallet_transactions(
     except DoesNotExistError as e:
         return e.get_error_json_response(404)
     except WalletPermissionError as e:
-        return e.get_error_json_response(404)
+        return e.get_error_json_response(403)

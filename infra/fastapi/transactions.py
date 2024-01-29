@@ -37,7 +37,11 @@ class TransactionsListEnvelope(BaseModel):
     "/transactions",
     status_code=201,
     response_model=TransactionItemEnvelope,
-    responses={409: {"model": ErrorMessageEnvelope}},
+    responses={401: {"model": ErrorMessageEnvelope},
+               403: {"model": ErrorMessageEnvelope},
+               404: {"model": ErrorMessageEnvelope},
+               405: {"model": ErrorMessageEnvelope},
+               409: {"model": ErrorMessageEnvelope}},
 )
 def make_transaction(
         api_key: ApiKey, request: MakeTransactionItem, transactions: TransactionRepositoryDependable
@@ -46,25 +50,26 @@ def make_transaction(
         transaction = transactions.make_transaction(api_key, **request.model_dump())
         return {"transaction": transaction}
     except NotEnoughBitcoinError as e:
-        return e.get_error_json_response()
+        return e.get_error_json_response(409)
     except TransactionBetweenSameWalletError as e:
-        return e.get_error_json_response()
+        return e.get_error_json_response(405)
     except WalletPermissionError as e:
-        return e.get_error_json_response()
+        return e.get_error_json_response(403)
     except DoesNotExistError as e:
-        return e.get_error_json_response()
+        return e.get_error_json_response(404)
     except InvalidApiKeyError as e:
-        return e.get_error_json_response()
+        return e.get_error_json_response(401)
 
 
 @transactions_api.get(
     "/transactions",
     status_code=200,
     response_model=TransactionsListEnvelope,
+    responses={401: {"model": ErrorMessageEnvelope}},
 )
 def read_all_transactions(api_key: ApiKey, transactions: TransactionRepositoryDependable
                           ) -> dict[str, list[Transaction]] | JSONResponse:
     try:
         return {"transactions": transactions.read_all(api_key)}
     except InvalidApiKeyError as e:
-        return e.get_error_json_response()
+        return e.get_error_json_response(401)

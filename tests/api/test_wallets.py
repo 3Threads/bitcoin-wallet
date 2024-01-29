@@ -32,7 +32,7 @@ def test_should_not_create_product_above_limit(client: TestClient) -> None:
         assert response.status_code == 201
 
     response = client.post("/wallets", headers={"api_key": api_key})
-    assert response.status_code == 403
+    assert response.status_code == 409
     assert response.json() == {
         "error": {
             "message": f"User<{api_key}> reached wallets limit({WALLETS_LIMIT})."
@@ -90,7 +90,7 @@ def test_should_not_read_others_wallet(client: TestClient) -> None:
     wallet_address = response.json()['wallet']['address']
     response = client.get(f"/wallets/{wallet_address}", headers={"api_key": api_key2})
 
-    assert response.status_code == 404
+    assert response.status_code == 403
     assert response.json() == {
         "error": {"message": f"User does not have wallet<{wallet_address}>."}
     }

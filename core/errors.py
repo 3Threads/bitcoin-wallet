@@ -4,8 +4,7 @@ from uuid import UUID
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from infra.constants import WALLETS_LIMIT, TRANSACTION_BETWEEN_SAME_WALLET_ERROR_CODE, NOT_ENOUGH_BITCOIN_IN_ERROR_CODE, \
-    WALLET_PERMISSION_ERROR_CODE, WALLETS_LIMIT_ERROR_CODE, INVALID_API_KEY_ERROR_CODE
+from infra.constants import WALLETS_LIMIT
 
 
 class ErrorMessageResponse(BaseModel):
@@ -38,7 +37,7 @@ class DoesNotExistError(Exception):
 class InvalidApiKeyError(Exception):
     api_key: str
 
-    def get_error_json_response(self, code: int = INVALID_API_KEY_ERROR_CODE) -> JSONResponse:
+    def get_error_json_response(self, code: int = 401) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
@@ -50,27 +49,10 @@ class InvalidApiKeyError(Exception):
 
 
 @dataclass
-class ClosedReceiptError(Exception):
-    name: str
-    field: str
-    value: str
-
-    def get_error_json_response(self, code: int = 403) -> JSONResponse:
-        return JSONResponse(
-            status_code=code,
-            content={
-                "error": {
-                    "message": f"{self.name} with {self.field}<{self.value}> is closed."
-                }
-            },
-        )
-
-
-@dataclass
 class WalletsLimitError(Exception):
     api_key: str
 
-    def get_error_json_response(self, code: int = WALLETS_LIMIT_ERROR_CODE) -> JSONResponse:
+    def get_error_json_response(self, code: int = 409) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
@@ -85,7 +67,7 @@ class WalletsLimitError(Exception):
 class WalletPermissionError(Exception):
     wallet_address: UUID
 
-    def get_error_json_response(self, code: int = WALLET_PERMISSION_ERROR_CODE) -> JSONResponse:
+    def get_error_json_response(self, code: int = 403) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
@@ -100,7 +82,7 @@ class WalletPermissionError(Exception):
 class NotEnoughBitcoinError(Exception):
     wallet_address: UUID
 
-    def get_error_json_response(self, code: int = NOT_ENOUGH_BITCOIN_IN_ERROR_CODE) -> JSONResponse:
+    def get_error_json_response(self, code: int = 409) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
@@ -113,7 +95,7 @@ class NotEnoughBitcoinError(Exception):
 
 @dataclass
 class TransactionBetweenSameWalletError(Exception):
-    def get_error_json_response(self, code: int = TRANSACTION_BETWEEN_SAME_WALLET_ERROR_CODE) -> JSONResponse:
+    def get_error_json_response(self, code: int = 405) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
@@ -128,7 +110,7 @@ class TransactionBetweenSameWalletError(Exception):
 class EmailAlreadyExistError(Exception):
     email: str
 
-    def get_error_json_response(self, code: int = 404) -> JSONResponse:
+    def get_error_json_response(self, code: int = 409) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={

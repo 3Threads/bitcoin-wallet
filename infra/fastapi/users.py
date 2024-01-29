@@ -2,7 +2,9 @@ from uuid import UUID
 
 from fastapi import APIRouter
 from pydantic import BaseModel
+from starlette.responses import JSONResponse
 
+from core.errors import EmailAlreadyExistError, ErrorMessageEnvelope
 from core.user import User
 from infra.fastapi.dependables import UserRepositoryDependable
 
@@ -25,11 +27,15 @@ class UserItemEnvelope(BaseModel):
 @users_api.post(
     "/users",
     status_code=201,
-    response_model=UserItemEnvelope
+    response_model=UserItemEnvelope,
+    responses={409: {"model": ErrorMessageEnvelope}},
 )
 def register_user(
         request: UserRequest,
         users: UserRepositoryDependable
-) -> dict[str, User]:
+) -> dict[str, User] | JSONResponse:
     email = request.email
-    return {"user": users.create(email)}
+    try:
+        return {"user": users.create(email)}
+    except EmailAlreadyExistError as e:
+        return e.get_error_json_response(409)
