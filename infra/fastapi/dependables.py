@@ -4,16 +4,8 @@ from fastapi import Depends, Header
 from fastapi.requests import Request
 
 from core.transaction import TransactionRepository
-from core.unit import UnitRepository
 from core.wallet import WalletRepository
 from core.user import UserRepository
-
-
-def get_unit_repository(request: Request) -> UnitRepository:
-    return request.app.state.units  # type: ignore
-
-
-UnitRepositoryDependable = Annotated[UnitRepository, Depends(get_unit_repository)]
 
 
 def get_user_repository(request: Request) -> UserRepository:

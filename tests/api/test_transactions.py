@@ -4,8 +4,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from core.user import generate_api_key
-from infra.constants import InvalidApiKeyErrorCode, TransactionBetweenSameWalletErrorCode, WalletPermissionErrorCode, \
-    NotEnoughBitcoinErrorCode, DoesNotExistErrorCode
+from infra.constants import INVALID_API_KEY_ERROR_CODE, TRANSACTION_BETWEEN_SAME_WALLET_ERROR_CODE, WALLET_PERMISSION_ERROR_CODE, \
+    NOT_ENOUGH_BITCOIN_IN_ERROR_CODE, DOES_NOT_EXIST_ERROR_CODE
 from runner.setup import init_app
 from tests.api.fixture_fuctions import create_user_and_get_key, create_wallet_and_get_address
 
@@ -37,7 +37,7 @@ def test_should_not_make_transaction_without_api_key(client: TestClient) -> None
                            json={"from_address": str(uuid4()), "to_address": str(uuid4()),
                                  "transaction_amount": 0.5})
 
-    assert response.status_code == InvalidApiKeyErrorCode
+    assert response.status_code == INVALID_API_KEY_ERROR_CODE
     assert response.json() == {
         "error": {"message": f"Invalid API key: {unknown_api_key}"}
     }
@@ -51,7 +51,7 @@ def test_make_transaction_unknown_wallet(client: TestClient) -> None:
                            json={"from_address": unknown_wallet_address, "to_address": str(uuid4()),
                                  "transaction_amount": 0.5})
 
-    assert response.status_code == DoesNotExistErrorCode
+    assert response.status_code == DOES_NOT_EXIST_ERROR_CODE
     assert response.json() == {
         "error": {"message": f"Wallet with address<{unknown_wallet_address}> does not exist."}
     }
@@ -65,7 +65,7 @@ def test_make_transaction_same_wallet(client: TestClient) -> None:
                            json={"from_address": unknown_wallet_address, "to_address": unknown_wallet_address,
                                  "transaction_amount": 0.5})
 
-    assert response.status_code == TransactionBetweenSameWalletErrorCode
+    assert response.status_code == TRANSACTION_BETWEEN_SAME_WALLET_ERROR_CODE
     assert response.json() == {
         "error": {"message": f"Transaction between one wallet is restricted."}
     }
@@ -81,7 +81,7 @@ def test_make_transaction_with_other_wallet(client: TestClient) -> None:
                            json={"from_address": wallet_address2, "to_address": wallet_address1,
                                  "transaction_amount": 0.5})
 
-    assert response.status_code == WalletPermissionErrorCode
+    assert response.status_code == WALLET_PERMISSION_ERROR_CODE
     assert response.json() == {
         "error": {"message": f"User does not have wallet<{wallet_address2}>."}
     }
@@ -96,7 +96,7 @@ def test_make_transaction_not_enough_bitcoin(client: TestClient) -> None:
                            json={"from_address": wallet_address1, "to_address": wallet_address2,
                                  "transaction_amount": 1.5})
 
-    assert response.status_code == NotEnoughBitcoinErrorCode
+    assert response.status_code == NOT_ENOUGH_BITCOIN_IN_ERROR_CODE
     assert response.json() == {
         "error": {"message": f"Not enough bitcoin on the wallet with address<{wallet_address1}>."}
     }
@@ -124,7 +124,7 @@ def test_should_read_transactions_without_api_key(client: TestClient) -> None:
 
     response = client.get("/transactions", headers={"api_key": unknown_api_key})
 
-    assert response.status_code == InvalidApiKeyErrorCode
+    assert response.status_code == INVALID_API_KEY_ERROR_CODE
     assert response.json() == {
         "error": {"message": f"Invalid API key: {unknown_api_key}"}
     }

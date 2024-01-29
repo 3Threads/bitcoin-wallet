@@ -1,15 +1,6 @@
 from uuid import uuid4
 
-from core.errors import AlreadyExistError, ClosedReceiptError, DoesNotExistError
-
-
-def test_already_exist_error() -> None:
-    json = AlreadyExistError("Unit", "name", "kg").get_error_json_response(409)
-    assert json.status_code == 409
-    assert (
-        json.body.decode("utf-8")
-        == '{"error":{"message":"Unit with name<kg> already exists."}}'
-    )
+from core.errors import ClosedReceiptError, DoesNotExistError
 
 
 def test_does_not_exist_error() -> None:
@@ -17,10 +8,10 @@ def test_does_not_exist_error() -> None:
     json = DoesNotExistError("Unit", "id", str(unknown_id)).get_error_json_response(404)
     assert json.status_code == 404
     assert (
-        json.body.decode("utf-8")
-        == '{"error":{"message":"Unit with id<'
-        + str(unknown_id)
-        + '> does not exist."}}'
+            json.body.decode("utf-8")
+            == '{"error":{"message":"Unit with id<'
+            + str(unknown_id)
+            + '> does not exist."}}'
     )
 
 
@@ -31,6 +22,6 @@ def test_closed_receipt_error() -> None:
     )
     assert json.status_code == 403
     assert (
-        json.body.decode("utf-8")
-        == '{"error":{"message":"Receipt with id<' + str(receipt_id) + '> is closed."}}'
+            json.body.decode("utf-8")
+            == '{"error":{"message":"Receipt with id<' + str(receipt_id) + '> is closed."}}'
     )
