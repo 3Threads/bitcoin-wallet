@@ -4,7 +4,8 @@ from uuid import UUID
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from infra.constants import WALLETS_LIMIT
+from infra.constants import WALLETS_LIMIT, TransactionBetweenSameWalletErrorCode, NotEnoughBitcoinErrorCode, \
+    WalletPermissionErrorCode, WalletsLimitErrorCode, InvalidApiKeyErrorCode
 
 
 class ErrorMessageResponse(BaseModel):
@@ -55,7 +56,7 @@ class DoesNotExistError(Exception):
 class InvalidApiKeyError(Exception):
     api_key: str
 
-    def get_error_json_response(self, code: int = 401) -> JSONResponse:
+    def get_error_json_response(self, code: int = InvalidApiKeyErrorCode) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
@@ -87,7 +88,7 @@ class ClosedReceiptError(Exception):
 class WalletsLimitError(Exception):
     api_key: str
 
-    def get_error_json_response(self, code: int = 403) -> JSONResponse:
+    def get_error_json_response(self, code: int = WalletsLimitErrorCode) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
@@ -102,7 +103,7 @@ class WalletsLimitError(Exception):
 class WalletPermissionError(Exception):
     wallet_address: UUID
 
-    def get_error_json_response(self, code: int = 404) -> JSONResponse:
+    def get_error_json_response(self, code: int = WalletPermissionErrorCode) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
@@ -117,7 +118,7 @@ class WalletPermissionError(Exception):
 class NotEnoughBitcoinError(Exception):
     wallet_address: UUID
 
-    def get_error_json_response(self, code: int = 404) -> JSONResponse:
+    def get_error_json_response(self, code: int = NotEnoughBitcoinErrorCode) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
@@ -130,7 +131,7 @@ class NotEnoughBitcoinError(Exception):
 
 @dataclass
 class TransactionBetweenSameWalletError(Exception):
-    def get_error_json_response(self, code: int = 404) -> JSONResponse:
+    def get_error_json_response(self, code: int = TransactionBetweenSameWalletErrorCode) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
