@@ -12,7 +12,7 @@ def client() -> TestClient:
 
 
 def test_should_create_user(client: TestClient) -> None:
-    response = client.post("/users")
+    response = client.post("/users", json={"email": "test@gmail.com"})
 
     assert response.status_code == 201
     assert response.json() == {"user": {"id": ANY, "api_key": ANY}}

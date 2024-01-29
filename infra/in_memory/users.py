@@ -9,8 +9,8 @@ from core.user import User
 class UsersInMemory:
     users: dict[UUID, User] = field(default_factory=dict)
 
-    def create(self) -> User:
-        user = User()
+    def create(self, email: str) -> User:
+        user = User(email=email)
         self.users[user.id] = user
         return user
 

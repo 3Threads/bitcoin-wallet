@@ -12,12 +12,13 @@ def generate_api_key():
 
 @dataclass
 class User:
+    email: str
     id: UUID = field(default_factory=uuid4)
     api_key: str = field(default_factory=generate_api_key)
 
 
 class UserRepository(Protocol):
-    def create(self) -> User:
+    def create(self, email: str) -> User:
         pass
 
     def try_authorization(self, api_key: str) -> User:

@@ -11,7 +11,7 @@ from infra.in_memory.users import UsersInMemory
 
 def test_create_user_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create()
+    user = users.create(email="test@gmail.com")
 
     assert user.api_key == ANY
     assert user.id == ANY
@@ -19,7 +19,7 @@ def test_create_user_in_memory() -> None:
 
 def test_read_correct_user_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create()
+    user = users.create(email="test@gmail.com")
 
     result_user = users.try_authorization(user.api_key)
 
