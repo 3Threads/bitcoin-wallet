@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from uuid import UUID
 
-from core.errors import DoesNotExistError, InvalidApiKeyError, EmailAlreadyExistsError
+from core.errors import InvalidApiKeyError, EmailAlreadyExistError
 from core.user import User
 
 
@@ -9,10 +9,10 @@ from core.user import User
 class UsersInMemory:
     users: dict[UUID, User] = field(default_factory=dict)
 
-    def create(self, email: str) -> EmailAlreadyExistsError | User:
+    def create(self, email: str) -> EmailAlreadyExistError | User:
         for (user_id, user) in self.users.items():
             if user.email == email:
-                raise EmailAlreadyExistsError(email)
+                raise EmailAlreadyExistError(email)
 
         user = User(email=email)
         self.users[user.id] = user

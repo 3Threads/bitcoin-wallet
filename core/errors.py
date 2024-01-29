@@ -142,7 +142,7 @@ class TransactionBetweenSameWalletError(Exception):
 
 
 @dataclass
-class EmailAlreadyExistsError(Exception):
+class EmailAlreadyExistError(Exception):
     email: str
 
     def get_error_json_response(self, code: int = 404) -> JSONResponse:
