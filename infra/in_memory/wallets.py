@@ -38,3 +38,8 @@ class WalletsInMemory:
             return wallet
         except KeyError:
             raise DoesNotExistError("Wallet", "address", str(address))
+
+    def update_balance(self, address: UUID, new_balance: float) -> None:
+        wallet = self.wallets[address]
+        wallet.balance = new_balance
+        self.wallets[address] = wallet

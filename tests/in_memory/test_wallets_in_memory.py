@@ -1,5 +1,5 @@
 from unittest.mock import ANY
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 import pytest
 
@@ -97,3 +97,14 @@ def test_read_wallet_ignore_permission_in_memory() -> None:
 
     result_wallet = wallets.read(wallet.address, user2.api_key, False)
     assert result_wallet == wallet
+
+
+def test_update_balance_in_memory() -> None:
+    users = UsersInMemory()
+    user = users.create(email="test@gmail.com")
+    wallets = WalletsInMemory(users)
+    wallet = wallets.create(user.api_key)
+    wallets.update_balance(wallet.address, 100)
+
+    assert wallets.read(wallet.address, user.api_key).balance == 100
+

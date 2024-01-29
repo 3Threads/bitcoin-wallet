@@ -21,3 +21,6 @@ class WalletRepository(Protocol):
 
     def read_all(self, api_key: str) -> list[Wallet]:
         pass
+
+    def update_balance(self, param):
+        pass

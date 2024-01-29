@@ -24,13 +24,17 @@ class TransactionsInMemory:
         if from_wallet.balance < transaction_amount:
             raise NotEnoughBitcoinError(from_address)
 
-        from_wallet.balance -= transaction_amount
-        to_wallet.balance += transaction_amount
+        from_new_balance = from_wallet.balance - transaction_amount
+        to_new_balance = from_wallet.balance + transaction_amount
 
         fee = 0
         if from_wallet.user_id != to_wallet.user_id:
             fee = transaction_amount * 1.5 / 100
-        to_wallet.balance -= fee
+
+        to_new_balance -= fee
+
+        self.wallets.update_balance(from_address, from_new_balance)
+        self.wallets.update_balance(to_address, to_new_balance)
 
         transaction = Transaction(from_address, to_address, transaction_amount, fee)
         self.transactions.append(transaction)
