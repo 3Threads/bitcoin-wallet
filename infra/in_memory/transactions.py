@@ -15,14 +15,14 @@ class TransactionsInMemory:
     def make_transaction(self, from_api_key: str, from_address: UUID, to_address: UUID,
                          transaction_amount: float) -> Transaction:
         from_wallet = self.wallets.read(from_address, from_api_key)
-        to_wallet = self.wallets.read(to_address, from_api_key)
+        to_wallet = self.wallets.read(to_address, from_api_key, False)
 
         from_wallet.balance -= transaction_amount
         to_wallet.balance += transaction_amount
 
         fee = 0
         if from_wallet.user_id != to_wallet.user_id:
-            fee = transaction_amount * 101.5 / 100
+            fee = transaction_amount * 1.5 / 100
         to_wallet.balance -= fee
 
         transaction = Transaction(from_address, to_address, transaction_amount, fee)
