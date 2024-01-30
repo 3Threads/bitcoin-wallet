@@ -4,7 +4,7 @@ from sqlite3 import Connection, Cursor
 from core.errors import InvalidApiKeyError
 from core.statistic import Statistic
 from infra.constants import ADMIN_API_KEY
-from infra.in_memory.transactions import TransactionsInMemory
+from infra.sqlite.transactions import TransactionsDataBase
 
 
 @dataclass
