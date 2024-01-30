@@ -43,3 +43,11 @@ class WalletsInMemory:
         wallet = self.wallets[address]
         wallet.balance = new_balance
         self.wallets[address] = wallet
+
+    def read_all(self, api_key: str) -> list[Wallet]:
+        user = self.users.try_authorization(api_key)
+        wallets = []
+        for wallet in self.wallets.values():
+            if wallet.user_id == user.id:
+                wallets.append(wallet)
+        return wallets

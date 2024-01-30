@@ -52,3 +52,14 @@ class WalletsDatabase:
     def update_balance(self, address: UUID, new_balance: float) -> None:
         self.cur.execute("UPDATE WALLETS SET BALANCE = ? WHERE ADDRESS = ?", [new_balance, str(address)])
         self.con.commit()
+
+    def read_all(self, api_key: str) -> list[Wallet]:
+        user = self.users.try_authorization(api_key)
+        self.cur.execute("SELECT * FROM WALLETS WHERE USER_ID = ?", [str(user.id)])
+        wallets = []
+        result = self.cur.fetchall()
+        for wallet in result:
+            if str(wallet[1]) == str(user.id):
+                w = Wallet(UUID(wallet[1]), UUID(wallet[0]), float(wallet[2]))
+                wallets.append(w)
+        return wallets
