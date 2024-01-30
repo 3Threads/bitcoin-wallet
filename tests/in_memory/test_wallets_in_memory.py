@@ -112,3 +112,22 @@ def test_update_balance_in_memory() -> None:
 
     assert wallets.read(wallet.address, user.api_key).balance == 100
 
+
+def test_read_all() -> None:
+    users = UsersInMemory()
+    user = users.create(email="test@gmail.com")
+
+    wallets = WalletsInMemory(users)
+    wallet1 = wallets.create(user.api_key)
+    wallet2 = wallets.create(user.api_key)
+
+    wallets.update_balance(wallet1.address, 100)
+    wallets.update_balance(wallet2.address, 200)
+
+    all_wallets = wallets.read_all(user.api_key)
+
+    assert len(all_wallets) == 2
+    assert all_wallets[0].balance == 100
+    assert all_wallets[1].balance == 200
+    assert all_wallets[1] == wallet2
+    assert all_wallets[0] == wallet1
