@@ -24,7 +24,7 @@ def db() -> Database:
     db.initial()
     return db
 
-def test_make_transaction_in_memory(db: Database) -> None:
+def test_make_transaction(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user = users.create(email="test@gmail.com")
 
@@ -46,7 +46,7 @@ def test_make_transaction_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_make_transaction_between_two_users_in_memory(db: Database) -> None:
+def test_make_transaction_between_two_users(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user1 = users.create(email="test@gmail.com")
     user2 = users.create(email="test1@gmail.com")
@@ -68,7 +68,7 @@ def test_make_transaction_between_two_users_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_make_transaction_without_enough_balance_in_memory(db: Database) -> None:
+def test_make_transaction_without_enough_balance(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user = users.create(email="test@gmail.com")
 
@@ -82,7 +82,7 @@ def test_make_transaction_without_enough_balance_in_memory(db: Database) -> None
     db.close_database()
 
 
-def test_make_transaction_between_same_wallet_in_memory(db: Database) -> None:
+def test_make_transaction_between_same_wallet(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user = users.create("test@gmail.com")
 
@@ -95,7 +95,7 @@ def test_make_transaction_between_same_wallet_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_make_transaction_other_api_key_in_memory(db: Database) -> None:
+def test_make_transaction_other_api_key(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user1 = users.create(email="test@gmail.com")
     user2 = users.create(email="test1@gmail.com")
@@ -109,7 +109,7 @@ def test_make_transaction_other_api_key_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_make_transaction_unknown_wallet_address_in_memory(db: Database) -> None:
+def test_make_transaction_unknown_wallet_address(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
 
@@ -120,7 +120,7 @@ def test_make_transaction_unknown_wallet_address_in_memory(db: Database) -> None
     db.close_database()
 
 
-def test_make_transaction_unknown_api_key_in_memory(db: Database) -> None:
+def test_make_transaction_unknown_api_key(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
@@ -132,7 +132,7 @@ def test_make_transaction_unknown_api_key_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_read_all_transactions_empty_in_memory(db: Database) -> None:
+def test_read_all_transactions_empty(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user = users.create(email="test@gmail.com")
 
@@ -144,7 +144,7 @@ def test_read_all_transactions_empty_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_read_all_transactions_in_memory(db: Database) -> None:
+def test_read_all_transactions(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user1 = users.create(email="test@gmail.com")
     user2 = users.create(email="test1@gmail.com")
@@ -160,7 +160,7 @@ def test_read_all_transactions_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_read_all_transactions_unknown_api_key_in_memory(db: Database) -> None:
+def test_read_all_transactions_unknown_api_key(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
@@ -170,7 +170,7 @@ def test_read_all_transactions_unknown_api_key_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_get_wallet_transactions_unknown_api_key_in_memory(db: Database) -> None:
+def test_get_wallet_transactions_unknown_api_key(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
@@ -182,7 +182,7 @@ def test_get_wallet_transactions_unknown_api_key_in_memory(db: Database) -> None
     db.close_database()
 
 
-def test_get_wallet_transactions_unknown_wallet_address_in_memory(db: Database) -> None:
+def test_get_wallet_transactions_unknown_wallet_address(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
 
@@ -193,7 +193,7 @@ def test_get_wallet_transactions_unknown_wallet_address_in_memory(db: Database) 
     db.close_database()
 
 
-def test_get_wallet_transactions_other_api_key_in_memory(db: Database) -> None:
+def test_get_wallet_transactions_other_api_key(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user1 = users.create(email="test@gmail.com")
     user2 = users.create(email="test1@gmail.com")
@@ -206,7 +206,7 @@ def test_get_wallet_transactions_other_api_key_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_get_wallet_transactions_in_memory(db: Database) -> None:
+def test_get_wallet_transactions(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user1 = users.create(email="test@gmail.com")
     user2 = users.create(email="test1@gmail.com")

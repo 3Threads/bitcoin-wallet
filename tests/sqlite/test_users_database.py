@@ -46,7 +46,7 @@ def test_read_correct_user(db: Database) -> None:
     db.close_database()
 
 
-def test_invalid_api_key_in_memory(db: Database) -> None:
+def test_invalid_api_key(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
 
     with pytest.raises(InvalidApiKeyError):

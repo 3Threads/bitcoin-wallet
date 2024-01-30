@@ -1,3 +1,4 @@
+import bdb
 import os
 from unittest.mock import ANY
 from uuid import uuid4
@@ -12,8 +13,6 @@ from core.errors import (
 )
 from core.user import generate_api_key
 from infra.constants import SQL_FILE_TEST, STARTING_BITCOIN_AMOUNT, WALLETS_LIMIT
-from infra.in_memory.users import UsersInMemory
-from infra.in_memory.wallets import WalletsInMemory
 from infra.sqlite.database_connect import Database
 from infra.sqlite.users import UsersDatabase
 from infra.sqlite.wallets import WalletsDatabase
@@ -26,7 +25,7 @@ def db() -> Database:
     return db
 
 
-def test_create_wallet_in_memory(db: Database) -> None:
+def test_create_wallet(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user = users.create(email="test@gmail.com")
 
@@ -40,7 +39,7 @@ def test_create_wallet_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_create_wallet_reach_limit_in_memory(db: Database) -> None:
+def test_create_wallet_reach_limit(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user = users.create(email="test@gmail.com")
 
@@ -53,7 +52,7 @@ def test_create_wallet_reach_limit_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_create_wallet_with_unknown_key_in_memory(db: Database) -> None:
+def test_create_wallet_with_unknown_key(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
 
@@ -62,7 +61,7 @@ def test_create_wallet_with_unknown_key_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_read_wallet_in_memory(db: Database) -> None:
+def test_read_wallet(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user = users.create(email="test@gmail.com")
 
@@ -75,7 +74,7 @@ def test_read_wallet_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_read_wallet_with_wrong_key_in_memory(db: Database) -> None:
+def test_read_wallet_with_wrong_key(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user = users.create(email="test@gmail.com")
 
@@ -87,7 +86,7 @@ def test_read_wallet_with_wrong_key_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_read_unknown_wallet_in_memory(db: Database) -> None:
+def test_read_unknown_wallet(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user = users.create(email="test@gmail.com")
 
@@ -98,7 +97,7 @@ def test_read_unknown_wallet_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_read_others_wallet_in_memory(db: Database) -> None:
+def test_read_others_wallet(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user1 = users.create(email="test@gmail.com")
     user2 = users.create(email="test1@gmail.com")
@@ -112,7 +111,7 @@ def test_read_others_wallet_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_read_wallet_ignore_permission_in_memory(db: Database) -> None:
+def test_read_wallet_ignore_permission(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user1 = users.create(email="test@gmail.com")
     user2 = users.create(email="test1@gmail.com")
@@ -127,7 +126,7 @@ def test_read_wallet_ignore_permission_in_memory(db: Database) -> None:
     db.close_database()
 
 
-def test_update_balance_in_memory(db: Database) -> None:
+def test_update_balance(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     user = users.create(email="test@gmail.com")
 
@@ -140,3 +139,19 @@ def test_update_balance_in_memory(db: Database) -> None:
 
     db.close_database()
 
+def test_read_all(db: Database) -> None:
+    users = UsersDatabase(db.get_connection(), db.get_cursor())
+    user = users.create(email="test@gmail.com")
+
+    wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
+    wallet1 = wallets.create(user.api_key)
+    wallet2 = wallets.create(user.api_key)
+
+    wallets.update_balance(wallet1.address, 100)
+    wallets.update_balance(wallet2.address, 200)
+
+    all_wallets = wallets.read_all(user.api_key)
+
+    assert len(all_wallets) == 2
+    assert all_wallets[0].balance == 100
+    assert all_wallets[1].balance == 200
