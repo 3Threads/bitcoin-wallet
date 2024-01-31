@@ -5,7 +5,6 @@ from uuid import UUID
 
 from core.errors import TransactionBetweenSameWalletError, NotEnoughBitcoinError, DoesNotExistError
 from core.transaction import Transaction
-from core.wallet import Wallet
 from infra.sqlite.users import UsersDatabase
 from infra.sqlite.wallets import WalletsDatabase
 
@@ -68,8 +67,6 @@ class TransactionsDataBase:
         self.cur.execute("SELECT * FROM TRANSACTIONS WHERE (FROM_ADDRESS = ? OR TO_ADDRESS = ?)",
                          [str(address), str(address)])
         result = self.cur.fetchall()
-        if len(result) == 0:
-            raise DoesNotExistError("Wallet", "address", str(address))
 
         transactions = []
         for row in result:
