@@ -56,6 +56,7 @@ class TransactionsDataBase:
                 """,
             (str(from_address), str(to_address), transaction_amount, fee),
         )
+        self.con.commit()
         return transaction
 
     def read_all(self, api_key: str) -> list[Transaction]:

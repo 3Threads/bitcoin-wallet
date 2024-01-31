@@ -13,6 +13,7 @@ from infra.in_memory.users import UsersInMemory
 from infra.in_memory.wallets import WalletsInMemory
 from infra.sqlite.database_connect import Database
 from infra.sqlite.statistics import StatisticsDatabase
+from infra.sqlite.transactions import TransactionsDataBase
 from infra.sqlite.users import UsersDatabase
 from infra.sqlite.wallets import WalletsDatabase
 
@@ -26,10 +27,13 @@ def init_app() -> FastAPI:
 
     if os.getenv("WALLET_REPOSITORY_KIND", "memory") == "sqlite":
         db = Database(DATABASE_NAME, os.path.abspath(SQL_FILE))
-        # db.initial()    Uncomment this if you want to create initial db
+        # db.initial()    # Uncomment this if you want to create initial db
         app.state.users = UsersDatabase(db.get_connection(), db.get_cursor())
         app.state.wallets = WalletsDatabase(
             db.get_connection(), db.get_cursor(), app.state.users
+        )
+        app.state.transactions = TransactionsDataBase(
+            db.get_connection(), db.get_cursor(), app.state.wallets, app.state.users
         )
         app.state.statistics = StatisticsDatabase(
             db.get_connection(), db.get_cursor(), app.state.transactions
