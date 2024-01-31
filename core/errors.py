@@ -57,7 +57,8 @@ class WalletsLimitError(Exception):
             status_code=code,
             content={
                 "error": {
-                    f"message": f"User<{self.api_key}> reached wallets limit({WALLETS_LIMIT})."
+                    "message": f"User<{self.api_key}> "
+                               f"reached wallets limit({WALLETS_LIMIT})."
                 }
             },
         )
@@ -72,7 +73,7 @@ class WalletPermissionError(Exception):
             status_code=code,
             content={
                 "error": {
-                    f"message": f"User does not have wallet<{self.wallet_address}>."
+                    "message": f"User does not have wallet<{self.wallet_address}>."
                 }
             },
         )
@@ -87,7 +88,8 @@ class NotEnoughBitcoinError(Exception):
             status_code=code,
             content={
                 "error": {
-                    f"message": f"Not enough bitcoin on the wallet with address<{self.wallet_address}>."
+                    "message": f"Not enough bitcoin on the wallet with address"
+                               f"<{self.wallet_address}>."
                 }
             },
         )
@@ -100,7 +102,7 @@ class TransactionBetweenSameWalletError(Exception):
             status_code=code,
             content={
                 "error": {
-                    f"message": f"Transaction between one wallet is restricted."
+                    "message": "Transaction between one wallet is restricted."
                 }
             },
         )
@@ -115,7 +117,7 @@ class EmailAlreadyExistError(Exception):
             status_code=code,
             content={
                 "error": {
-                    f"message": f"The email: {self.email} already exists."
+                    "message": f"The email: {self.email} already exists."
                 }
             },
         )

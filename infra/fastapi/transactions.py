@@ -2,8 +2,8 @@ from uuid import UUID
 
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
 
+from pydantic import BaseModel
 from core.errors import (
     DoesNotExistError,
     ErrorMessageEnvelope,
