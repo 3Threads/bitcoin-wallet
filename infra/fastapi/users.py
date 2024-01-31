@@ -17,6 +17,7 @@ class UserRequest(BaseModel):
 
 class UserItem(BaseModel):
     id: UUID
+    email: str
     api_key: str
 
 
