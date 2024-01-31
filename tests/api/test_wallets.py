@@ -148,3 +148,14 @@ def test_should_not_get_others_wallet_transactions(client: TestClient) -> None:
     assert response.json() == {
         "error": {"message": f"User does not have wallet<{wallet_address2}>."}
     }
+
+
+def test_should_not_get_invalid_wallet_transactions(client: TestClient) -> None:
+    api_key = create_user_and_get_key(client)
+    wallet_address = str(uuid4())
+    response = client.get(f"/wallets/{wallet_address}/transactions", headers={"api_key": api_key})
+
+    assert response.status_code == 404
+    assert response.json() == {
+        "error": {"message": f"Wallet with address<{wallet_address}> does not exist."}
+    }
