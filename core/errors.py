@@ -16,9 +16,7 @@ class ErrorMessageEnvelope(BaseModel):
 
 
 @dataclass
-class DoesNotExistError(Exception):
-    name: str
-    field: str
+class WalletDoesNotExistError(Exception):
     value: str
 
     def get_error_json_response(self, code: int = 404) -> JSONResponse:
@@ -26,7 +24,7 @@ class DoesNotExistError(Exception):
             status_code=code,
             content={
                 "error": {
-                    "message": f"{self.name} with {self.field}<{self.value}>"
+                    "message": f"Wallet with address<{self.value}>"
                     f" does not exist."
                 }
             },

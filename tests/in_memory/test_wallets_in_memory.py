@@ -4,7 +4,7 @@ from uuid import uuid4
 import pytest
 
 from core.errors import (
-    DoesNotExistError,
+    WalletDoesNotExistError,
     InvalidApiKeyError,
     WalletPermissionError,
     WalletsLimitError,
@@ -75,7 +75,7 @@ def test_read_unknown_wallet_in_memory() -> None:
 
     wallets = WalletsInMemory(users)
 
-    with pytest.raises(DoesNotExistError):
+    with pytest.raises(WalletDoesNotExistError):
         wallets.read(uuid4(), user.api_key)
 
 

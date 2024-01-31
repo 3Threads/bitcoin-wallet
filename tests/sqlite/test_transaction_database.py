@@ -4,7 +4,7 @@ from uuid import uuid4
 import pytest
 
 from core.errors import (
-    DoesNotExistError,
+    WalletDoesNotExistError,
     InvalidApiKeyError,
     NotEnoughBitcoinError,
     TransactionBetweenSameWalletError,
@@ -138,7 +138,7 @@ def test_make_transaction_unknown_wallet_address(db: Database) -> None:
         db.get_connection(), db.get_cursor(), wallets, users
     )
 
-    with pytest.raises(DoesNotExistError):
+    with pytest.raises(WalletDoesNotExistError):
         transactions.make_transaction(
             users.create("test@gmail.com").api_key, uuid4(), uuid4(), 0.5
         )
@@ -229,7 +229,7 @@ def test_get_wallet_transactions_unknown_wallet_address(db: Database) -> None:
         db.get_connection(), db.get_cursor(), wallets, users
     )
 
-    with pytest.raises(DoesNotExistError):
+    with pytest.raises(WalletDoesNotExistError):
         transactions.get_wallet_transactions(
             users.create("test@gmail.com").api_key, uuid4()
         )

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from uuid import UUID
 
-from core.errors import DoesNotExistError, WalletPermissionError, WalletsLimitError
+from core.errors import WalletDoesNotExistError, WalletPermissionError, WalletsLimitError
 from core.wallet import Wallet
 from infra.constants import WALLETS_LIMIT
 from infra.in_memory.users import UsersInMemory
@@ -30,7 +30,7 @@ class WalletsInMemory:
         return wallet
 
     def read(
-        self, address: UUID, api_key: str, check_permission: bool = True
+            self, address: UUID, api_key: str, check_permission: bool = True
     ) -> Wallet:
         user = self.users.try_authorization(api_key)
         try:
@@ -39,7 +39,7 @@ class WalletsInMemory:
                 raise WalletPermissionError(address)
             return wallet
         except KeyError:
-            raise DoesNotExistError("Wallet", "address", str(address))
+            raise WalletDoesNotExistError(str(address))
 
     def update_balance(self, address: UUID, new_balance: float) -> None:
         wallet = self.wallets[address]

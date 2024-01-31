@@ -6,7 +6,7 @@ from uuid import UUID
 from core.errors import (
     TransactionBetweenSameWalletError,
     NotEnoughBitcoinError,
-    DoesNotExistError,
+    WalletDoesNotExistError,
 )
 from core.transaction import Transaction
 from infra.sqlite.users import UsersDatabase

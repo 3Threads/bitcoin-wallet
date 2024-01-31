@@ -3,7 +3,7 @@ from sqlite3 import Connection, Cursor, IntegrityError
 from uuid import UUID
 
 from core.errors import (
-    DoesNotExistError,
+    WalletDoesNotExistError,
     InvalidApiKeyError,
     WalletPermissionError,
     WalletsLimitError,
@@ -48,7 +48,7 @@ class WalletsDatabase:
         )
         result = self.cur.fetchone()
         if result is None:
-            raise DoesNotExistError("Wallet", "address", str(address))
+            raise WalletDoesNotExistError(str(address))
 
         wallet = Wallet(UUID(result[0]), UUID(result[1]), result[2])
         if check_permission and wallet.user_id != user.id:

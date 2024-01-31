@@ -1,15 +1,15 @@
 from uuid import uuid4
 
-from core.errors import DoesNotExistError
+from core.errors import WalletDoesNotExistError
 
 
-def test_does_not_exist_error() -> None:
+def test_wallet_does_not_exist_error() -> None:
     unknown_id = uuid4()
-    json = DoesNotExistError("Unit", "id", str(unknown_id)).get_error_json_response(404)
+    json = WalletDoesNotExistError(str(unknown_id)).get_error_json_response(404)
     assert json.status_code == 404
     assert (
-        json.body.decode("utf-8")
-        == '{"error":{"message":"Unit with id<'
-        + str(unknown_id)
-        + '> does not exist."}}'
+            json.body.decode("utf-8")
+            == '{"error":{"message":"Wallet with address<'
+            + str(unknown_id)
+            + '> does not exist."}}'
     )

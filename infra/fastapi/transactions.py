@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 
 from pydantic import BaseModel
 from core.errors import (
-    DoesNotExistError,
+    WalletDoesNotExistError,
     ErrorMessageEnvelope,
     InvalidApiKeyError,
     NotEnoughBitcoinError,
@@ -65,7 +65,7 @@ def make_transaction(
         return e.get_error_json_response(405)
     except WalletPermissionError as e:
         return e.get_error_json_response(403)
-    except DoesNotExistError as e:
+    except WalletDoesNotExistError as e:
         return e.get_error_json_response(404)
     except InvalidApiKeyError as e:
         return e.get_error_json_response(401)

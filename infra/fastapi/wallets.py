@@ -4,7 +4,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from core.errors import (
-    DoesNotExistError,
+    WalletDoesNotExistError,
     ErrorMessageEnvelope,
     InvalidApiKeyError,
     WalletPermissionError,
@@ -66,7 +66,7 @@ def read_wallet(address: UUID, api_key: ApiKey, wallets: WalletRepositoryDependa
         return {"wallet": wallets.read(address, api_key)}
     except InvalidApiKeyError as e:
         return e.get_error_json_response(401)
-    except DoesNotExistError as e:
+    except WalletDoesNotExistError as e:
         return e.get_error_json_response(404)
     except WalletPermissionError as e:
         return e.get_error_json_response(403)
@@ -90,7 +90,7 @@ def get_wallet_transactions(
         return {"transactions": transactions}
     except InvalidApiKeyError as e:
         return e.get_error_json_response(401)
-    except DoesNotExistError as e:
+    except WalletDoesNotExistError as e:
         return e.get_error_json_response(404)
     except WalletPermissionError as e:
         return e.get_error_json_response(403)
