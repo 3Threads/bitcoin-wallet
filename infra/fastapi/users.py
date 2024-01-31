@@ -31,8 +31,7 @@ class UserItemEnvelope(BaseModel):
     responses={409: {"model": ErrorMessageEnvelope}},
 )
 def register_user(
-        request: UserRequest,
-        users: UserRepositoryDependable
+    request: UserRequest, users: UserRepositoryDependable
 ) -> dict[str, User] | JSONResponse:
     email = request.email
     try:

@@ -27,7 +27,7 @@ def db() -> Database:
 
 def test_create_wallet(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     wallet = wallets.create(user.api_key)
@@ -41,7 +41,7 @@ def test_create_wallet(db: Database) -> None:
 
 def test_create_wallet_reach_limit(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     for i in range(WALLETS_LIMIT):
@@ -63,7 +63,7 @@ def test_create_wallet_with_unknown_key(db: Database) -> None:
 
 def test_read_wallet(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     wallet = wallets.create(user.api_key)
@@ -76,7 +76,7 @@ def test_read_wallet(db: Database) -> None:
 
 def test_read_wallet_with_wrong_key(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     wallet = wallets.create(user.api_key)
@@ -88,7 +88,7 @@ def test_read_wallet_with_wrong_key(db: Database) -> None:
 
 def test_read_unknown_wallet(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
 
@@ -99,8 +99,8 @@ def test_read_unknown_wallet(db: Database) -> None:
 
 def test_read_others_wallet(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
 
@@ -113,8 +113,8 @@ def test_read_others_wallet(db: Database) -> None:
 
 def test_read_wallet_ignore_permission(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
 
@@ -128,7 +128,7 @@ def test_read_wallet_ignore_permission(db: Database) -> None:
 
 def test_update_balance(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     wallet = wallets.create(user.api_key)
@@ -139,9 +139,10 @@ def test_update_balance(db: Database) -> None:
 
     db.close_database()
 
+
 def test_read_all(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     wallet1 = wallets.create(user.api_key)

@@ -28,12 +28,18 @@ def init_app() -> FastAPI:
         db = Database(DATABASE_NAME, os.path.abspath(SQL_FILE))
         # db.initial()    Uncomment this if you want to create initial db
         app.state.users = UsersDatabase(db.get_connection(), db.get_cursor())
-        app.state.wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), app.state.users)
-        app.state.statistics = StatisticsDatabase(db.get_connection(), db.get_cursor(), app.state.transactions)
+        app.state.wallets = WalletsDatabase(
+            db.get_connection(), db.get_cursor(), app.state.users
+        )
+        app.state.statistics = StatisticsDatabase(
+            db.get_connection(), db.get_cursor(), app.state.transactions
+        )
     else:
         app.state.users = UsersInMemory()
         app.state.wallets = WalletsInMemory(app.state.users)
-        app.state.transactions = TransactionsInMemory(app.state.users, app.state.wallets)
+        app.state.transactions = TransactionsInMemory(
+            app.state.users, app.state.wallets
+        )
         app.state.statistics = StatisticsInMemory(app.state.transactions)
 
     return app

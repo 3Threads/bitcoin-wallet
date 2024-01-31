@@ -19,7 +19,7 @@ def db() -> Database:
 
 def test_insert_user(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     assert user.api_key == ANY
     assert user.id == ANY
@@ -29,16 +29,16 @@ def test_insert_user(db: Database) -> None:
 def test_create_same_user_twice(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     email = "test@gmail.com"
-    users.create(email=("%s" % email))
+    users.create(("%s" % email))
 
     with pytest.raises(EmailAlreadyExistError):
-        users.create(email=email)
+        users.create(email)
     db.close_database()
 
 
 def test_read_correct_user(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     result_user = users.try_authorization(user.api_key)
 

@@ -17,14 +17,16 @@ from infra.in_memory.wallets import WalletsInMemory
 
 def test_make_transaction_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsInMemory(users)
     from_wallet = wallets.create(user.api_key)
     to_wallet = wallets.create(user.api_key)
 
     transactions = TransactionsInMemory(users, wallets)
-    transaction = transactions.make_transaction(user.api_key, from_wallet.address, to_wallet.address, 0.5)
+    transaction = transactions.make_transaction(
+        user.api_key, from_wallet.address, to_wallet.address, 0.5
+    )
 
     assert transaction.from_address == from_wallet.address
     assert transaction.to_address == to_wallet.address
@@ -36,15 +38,17 @@ def test_make_transaction_in_memory() -> None:
 
 def test_make_transaction_between_two_users_in_memory() -> None:
     users = UsersInMemory()
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     from_wallet = wallets.create(user1.api_key)
     to_wallet = wallets.create(user2.api_key)
 
     transactions = TransactionsInMemory(users, wallets)
-    transaction = transactions.make_transaction(user1.api_key, from_wallet.address, to_wallet.address, 1)
+    transaction = transactions.make_transaction(
+        user1.api_key, from_wallet.address, to_wallet.address, 1
+    )
 
     assert transaction.from_address == from_wallet.address
     assert transaction.to_address == to_wallet.address
@@ -56,7 +60,7 @@ def test_make_transaction_between_two_users_in_memory() -> None:
 
 def test_make_transaction_without_enough_balance_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsInMemory(users)
     from_wallet = wallets.create(user.api_key)
@@ -64,7 +68,9 @@ def test_make_transaction_without_enough_balance_in_memory() -> None:
 
     transactions = TransactionsInMemory(users, wallets)
     with pytest.raises(NotEnoughBitcoinError):
-        transactions.make_transaction(user.api_key, from_wallet.address, to_wallet.address, 1.5)
+        transactions.make_transaction(
+            user.api_key, from_wallet.address, to_wallet.address, 1.5
+        )
 
 
 def test_make_transaction_between_same_wallet_in_memory() -> None:
@@ -81,15 +87,19 @@ def test_make_transaction_between_same_wallet_in_memory() -> None:
 
 def test_make_transaction_other_api_key_in_memory() -> None:
     users = UsersInMemory()
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     transactions = TransactionsInMemory(users, wallets)
 
     with pytest.raises(WalletPermissionError):
-        transactions.make_transaction(user2.api_key, wallets.create(user1.api_key).address,
-                                      wallets.create(user2.api_key).address, 0.5)
+        transactions.make_transaction(
+            user2.api_key,
+            wallets.create(user1.api_key).address,
+            wallets.create(user2.api_key).address,
+            0.5,
+        )
 
 
 def test_make_transaction_unknown_wallet_address_in_memory() -> None:
@@ -99,7 +109,9 @@ def test_make_transaction_unknown_wallet_address_in_memory() -> None:
     transactions = TransactionsInMemory(users, wallets)
 
     with pytest.raises(DoesNotExistError):
-        transactions.make_transaction(users.create(email="test@gmail.com").api_key, uuid4(), uuid4(), 0.5)
+        transactions.make_transaction(
+            users.create("test@gmail.com").api_key, uuid4(), uuid4(), 0.5
+        )
 
 
 def test_make_transaction_unknown_api_key_in_memory() -> None:
@@ -115,7 +127,7 @@ def test_make_transaction_unknown_api_key_in_memory() -> None:
 
 def test_read_all_transactions_empty_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsInMemory(users)
 
@@ -126,16 +138,20 @@ def test_read_all_transactions_empty_in_memory() -> None:
 
 def test_read_all_transactions_in_memory() -> None:
     users = UsersInMemory()
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet1 = wallets.create(user1.api_key)
     wallet2 = wallets.create(user2.api_key)
 
     transactions = TransactionsInMemory(users, wallets)
-    transaction1 = transactions.make_transaction(user1.api_key, wallet1.address, wallet2.address, 0.5)
-    transaction2 = transactions.make_transaction(user2.api_key, wallet2.address, wallet1.address, 0.5)
+    transaction1 = transactions.make_transaction(
+        user1.api_key, wallet1.address, wallet2.address, 0.5
+    )
+    transaction2 = transactions.make_transaction(
+        user2.api_key, wallet2.address, wallet1.address, 0.5
+    )
 
     assert transactions.read_all(user1.api_key) == [transaction1, transaction2]
 
@@ -167,32 +183,43 @@ def test_get_wallet_transactions_unknown_wallet_address_in_memory() -> None:
     transactions = TransactionsInMemory(users, wallets)
 
     with pytest.raises(DoesNotExistError):
-        transactions.get_wallet_transactions(users.create(email="test@gmail.com").api_key, uuid4())
+        transactions.get_wallet_transactions(
+            users.create("test@gmail.com").api_key, uuid4()
+        )
 
 
 def test_get_wallet_transactions_other_api_key_in_memory() -> None:
     users = UsersInMemory()
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     transactions = TransactionsInMemory(users, wallets)
 
     with pytest.raises(WalletPermissionError):
-        transactions.get_wallet_transactions(user2.api_key, wallets.create(user1.api_key).address)
+        transactions.get_wallet_transactions(
+            user2.api_key, wallets.create(user1.api_key).address
+        )
 
 
 def test_get_wallet_transactions_in_memory() -> None:
     users = UsersInMemory()
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet1 = wallets.create(user1.api_key)
     wallet2 = wallets.create(user2.api_key)
 
     transactions = TransactionsInMemory(users, wallets)
-    transaction1 = transactions.make_transaction(user1.api_key, wallet1.address, wallet2.address, 0.5)
-    transaction2 = transactions.make_transaction(user2.api_key, wallet2.address, wallet1.address, 0.5)
+    transaction1 = transactions.make_transaction(
+        user1.api_key, wallet1.address, wallet2.address, 0.5
+    )
+    transaction2 = transactions.make_transaction(
+        user2.api_key, wallet2.address, wallet1.address, 0.5
+    )
 
-    assert transactions.get_wallet_transactions(user1.api_key, wallet1.address) == [transaction1, transaction2]
+    assert transactions.get_wallet_transactions(user1.api_key, wallet1.address) == [
+        transaction1,
+        transaction2,
+    ]

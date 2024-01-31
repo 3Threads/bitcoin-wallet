@@ -21,8 +21,8 @@ def test_get_empty_statistics_in_memory() -> None:
 
 def test_get_statistics_in_memory() -> None:
     users = UsersInMemory()
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet1 = wallets.create(user1.api_key)

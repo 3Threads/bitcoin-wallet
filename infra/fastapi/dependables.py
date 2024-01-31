@@ -29,13 +29,15 @@ def get_transaction_repository(request: Request) -> TransactionRepository:
     return request.app.state.transactions  # type: ignore
 
 
-TransactionRepositoryDependable = (
-    Annotated)[TransactionRepository, Depends(get_transaction_repository)]
+TransactionRepositoryDependable = (Annotated)[
+    TransactionRepository, Depends(get_transaction_repository)
+]
 
 
 def get_statistic_repository(request: Request) -> StatisticRepository:
     return request.app.state.statistics  # type: ignore
 
 
-StatisticRepositoryDependable = (
-    Annotated)[StatisticRepository, Depends(get_statistic_repository)]
+StatisticRepositoryDependable = (Annotated)[
+    StatisticRepository, Depends(get_statistic_repository)
+]

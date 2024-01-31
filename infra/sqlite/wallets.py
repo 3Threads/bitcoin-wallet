@@ -24,7 +24,9 @@ class WalletsDatabase:
 
         wallet = Wallet(user.id)
 
-        self.cur.execute("SELECT USER_ID FROM WALLETS WHERE USER_ID = ?", [str(user.id)])
+        self.cur.execute(
+            "SELECT USER_ID FROM WALLETS WHERE USER_ID = ?", [str(user.id)]
+        )
         result = self.cur.fetchall()
         if len(result) >= WALLETS_LIMIT:
             raise WalletsLimitError(api_key)
@@ -36,9 +38,14 @@ class WalletsDatabase:
         self.con.commit()
         return wallet
 
-    def read(self, address: UUID, api_key: str, check_permission: bool = True) -> Wallet:
+    def read(
+        self, address: UUID, api_key: str, check_permission: bool = True
+    ) -> Wallet:
         user = self.users.try_authorization(api_key)
-        self.cur.execute("SELECT USER_ID, ADDRESS, BALANCE FROM WALLETS WHERE ADDRESS = ?", [str(address)])
+        self.cur.execute(
+            "SELECT USER_ID, ADDRESS, BALANCE FROM WALLETS WHERE ADDRESS = ?",
+            [str(address)],
+        )
         result = self.cur.fetchone()
         if result is None:
             raise DoesNotExistError("Wallet", "address", str(address))
@@ -50,7 +57,10 @@ class WalletsDatabase:
         return wallet
 
     def update_balance(self, address: UUID, new_balance: float) -> None:
-        self.cur.execute("UPDATE WALLETS SET BALANCE = ? WHERE ADDRESS = ?", [new_balance, str(address)])
+        self.cur.execute(
+            "UPDATE WALLETS SET BALANCE = ? WHERE ADDRESS = ?",
+            [new_balance, str(address)],
+        )
         self.con.commit()
 
     def read_all(self, api_key: str) -> list[Wallet]:

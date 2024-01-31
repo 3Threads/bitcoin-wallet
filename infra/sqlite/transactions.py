@@ -3,7 +3,11 @@ from sqlite3 import Connection
 from sqlite3 import Cursor
 from uuid import UUID
 
-from core.errors import TransactionBetweenSameWalletError, NotEnoughBitcoinError, DoesNotExistError
+from core.errors import (
+    TransactionBetweenSameWalletError,
+    NotEnoughBitcoinError,
+    DoesNotExistError,
+)
 from core.transaction import Transaction
 from infra.sqlite.users import UsersDatabase
 from infra.sqlite.wallets import WalletsDatabase
@@ -16,9 +20,13 @@ class TransactionsDataBase:
     wallets: WalletsDatabase
     users: UsersDatabase
 
-    def make_transaction(self, from_api_key: str, from_address: UUID, to_address: UUID,
-                         transaction_amount: float) -> Transaction:
-
+    def make_transaction(
+        self,
+        from_api_key: str,
+        from_address: UUID,
+        to_address: UUID,
+        transaction_amount: float,
+    ) -> Transaction:
         if from_address == to_address:
             raise TransactionBetweenSameWalletError()
 
@@ -41,11 +49,13 @@ class TransactionsDataBase:
         self.wallets.update_balance(to_address, to_new_balance)
 
         transaction = Transaction(from_address, to_address, transaction_amount, fee)
-        self.cur.execute('''
+        self.cur.execute(
+            """
                     INSERT INTO TRANSACTIONS (FROM_ADDRESS, TO_ADDRESS, AMOUNT, FEE)
                     VALUES (?, ?, ?, ?);
-                ''', (str(from_address), str(to_address),
-                      transaction_amount, fee))
+                """,
+            (str(from_address), str(to_address), transaction_amount, fee),
+        )
         return transaction
 
     def read_all(self, api_key: str) -> list[Transaction]:
@@ -53,8 +63,10 @@ class TransactionsDataBase:
         wallets = self.wallets.read_all(api_key)
         transactions = []
         for wallet in wallets:
-            self.cur.execute("SELECT * FROM TRANSACTIONS WHERE (FROM_ADDRESS = ? OR TO_ADDRESS = ?)",
-                             [str(wallet.address), str(wallet.address)])
+            self.cur.execute(
+                "SELECT * FROM TRANSACTIONS WHERE (FROM_ADDRESS = ? OR TO_ADDRESS = ?)",
+                [str(wallet.address), str(wallet.address)],
+            )
             result = self.cur.fetchall()
             for row in result:
                 transaction = Transaction(UUID(row[1]), UUID(row[2]), row[3], row[4])
@@ -64,8 +76,10 @@ class TransactionsDataBase:
     def get_wallet_transactions(self, api_key: str, address: UUID) -> list[Transaction]:
         self.users.try_authorization(api_key)
         self.wallets.read(address, api_key, True)
-        self.cur.execute("SELECT * FROM TRANSACTIONS WHERE (FROM_ADDRESS = ? OR TO_ADDRESS = ?)",
-                         [str(address), str(address)])
+        self.cur.execute(
+            "SELECT * FROM TRANSACTIONS WHERE (FROM_ADDRESS = ? OR TO_ADDRESS = ?)",
+            [str(address), str(address)],
+        )
         result = self.cur.fetchall()
 
         transactions = []

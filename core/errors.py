@@ -27,7 +27,7 @@ class DoesNotExistError(Exception):
             content={
                 "error": {
                     "message": f"{self.name} with {self.field}<{self.value}>"
-                               f" does not exist."
+                    f" does not exist."
                 }
             },
         )
@@ -40,11 +40,7 @@ class InvalidApiKeyError(Exception):
     def get_error_json_response(self, code: int = 401) -> JSONResponse:
         return JSONResponse(
             status_code=code,
-            content={
-                "error": {
-                    "message": f"Invalid API key: {self.api_key}"
-                }
-            },
+            content={"error": {"message": f"Invalid API key: {self.api_key}"}},
         )
 
 
@@ -58,7 +54,7 @@ class WalletsLimitError(Exception):
             content={
                 "error": {
                     "message": f"User<{self.api_key}> "
-                               f"reached wallets limit({WALLETS_LIMIT})."
+                    f"reached wallets limit({WALLETS_LIMIT})."
                 }
             },
         )
@@ -89,7 +85,7 @@ class NotEnoughBitcoinError(Exception):
             content={
                 "error": {
                     "message": f"Not enough bitcoin on the wallet with address"
-                               f"<{self.wallet_address}>."
+                    f"<{self.wallet_address}>."
                 }
             },
         )
@@ -101,9 +97,7 @@ class TransactionBetweenSameWalletError(Exception):
         return JSONResponse(
             status_code=code,
             content={
-                "error": {
-                    "message": "Transaction between one wallet is restricted."
-                }
+                "error": {"message": "Transaction between one wallet is restricted."}
             },
         )
 
@@ -115,9 +109,5 @@ class EmailAlreadyExistError(Exception):
     def get_error_json_response(self, code: int = 409) -> JSONResponse:
         return JSONResponse(
             status_code=code,
-            content={
-                "error": {
-                    "message": f"The email: {self.email} already exists."
-                }
-            },
+            content={"error": {"message": f"The email: {self.email} already exists."}},
         )

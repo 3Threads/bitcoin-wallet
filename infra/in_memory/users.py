@@ -10,11 +10,11 @@ class UsersInMemory:
     users: dict[UUID, User] = field(default_factory=dict)
 
     def create(self, email: str) -> EmailAlreadyExistError | User:
-        for (user_id, user) in self.users.items():
+        for user_id, user in self.users.items():
             if user.email == email:
                 raise EmailAlreadyExistError(email)
 
-        user = User(email=email)
+        user = User(email)
         self.users[user.id] = user
         return user
 

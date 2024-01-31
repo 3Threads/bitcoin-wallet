@@ -37,12 +37,12 @@ class WalletListEnvelope(BaseModel):
     "/wallets",
     status_code=201,
     response_model=WalletItemEnvelope,
-    responses={401: {"model": ErrorMessageEnvelope},
-               409: {"model": ErrorMessageEnvelope}},
+    responses={
+        401: {"model": ErrorMessageEnvelope},
+        409: {"model": ErrorMessageEnvelope},
+    },
 )
-def create_wallet(
-        api_key: ApiKey, wallets: WalletRepositoryDependable
-):
+def create_wallet(api_key: ApiKey, wallets: WalletRepositoryDependable):
     try:
         return {"wallet": wallets.create(api_key)}
     except InvalidApiKeyError as e:
@@ -55,13 +55,13 @@ def create_wallet(
     "/wallets/{address}",
     status_code=200,
     response_model=WalletItemEnvelope,
-    responses={401: {"model": ErrorMessageEnvelope},
-               403: {"model": ErrorMessageEnvelope},
-               404: {"model": ErrorMessageEnvelope}},
+    responses={
+        401: {"model": ErrorMessageEnvelope},
+        403: {"model": ErrorMessageEnvelope},
+        404: {"model": ErrorMessageEnvelope},
+    },
 )
-def read_wallet(
-        address: UUID, api_key: ApiKey, wallets: WalletRepositoryDependable
-):
+def read_wallet(address: UUID, api_key: ApiKey, wallets: WalletRepositoryDependable):
     try:
         return {"wallet": wallets.read(address, api_key)}
     except InvalidApiKeyError as e:
@@ -76,12 +76,14 @@ def read_wallet(
     "/wallets/{address}/transactions",
     status_code=200,
     response_model=TransactionsListEnvelope,
-    responses={401: {"model": ErrorMessageEnvelope},
-               403: {"model": ErrorMessageEnvelope},
-               404: {"model": ErrorMessageEnvelope}},
+    responses={
+        401: {"model": ErrorMessageEnvelope},
+        403: {"model": ErrorMessageEnvelope},
+        404: {"model": ErrorMessageEnvelope},
+    },
 )
 def get_wallet_transactions(
-        address: UUID, api_key: ApiKey, transactions: TransactionRepositoryDependable
+    address: UUID, api_key: ApiKey, transactions: TransactionRepositoryDependable
 ):
     try:
         transactions = transactions.get_wallet_transactions(api_key, address)

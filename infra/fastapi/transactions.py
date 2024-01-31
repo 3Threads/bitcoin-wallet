@@ -43,14 +43,18 @@ class TransactionsListEnvelope(BaseModel):
     "/transactions",
     status_code=201,
     response_model=TransactionItemEnvelope,
-    responses={401: {"model": ErrorMessageEnvelope},
-               403: {"model": ErrorMessageEnvelope},
-               404: {"model": ErrorMessageEnvelope},
-               405: {"model": ErrorMessageEnvelope},
-               409: {"model": ErrorMessageEnvelope}},
+    responses={
+        401: {"model": ErrorMessageEnvelope},
+        403: {"model": ErrorMessageEnvelope},
+        404: {"model": ErrorMessageEnvelope},
+        405: {"model": ErrorMessageEnvelope},
+        409: {"model": ErrorMessageEnvelope},
+    },
 )
 def make_transaction(
-        api_key: ApiKey, request: MakeTransactionItem, transactions: TransactionRepositoryDependable
+    api_key: ApiKey,
+    request: MakeTransactionItem,
+    transactions: TransactionRepositoryDependable,
 ) -> dict[str, Transaction] | JSONResponse:
     try:
         transaction = transactions.make_transaction(api_key, **request.model_dump())
@@ -73,8 +77,9 @@ def make_transaction(
     response_model=TransactionsListEnvelope,
     responses={401: {"model": ErrorMessageEnvelope}},
 )
-def read_all_transactions(api_key: ApiKey, transactions: TransactionRepositoryDependable
-                          ) -> dict[str, list[Transaction]] | JSONResponse:
+def read_all_transactions(
+    api_key: ApiKey, transactions: TransactionRepositoryDependable
+) -> dict[str, list[Transaction]] | JSONResponse:
     try:
         return {"transactions": transactions.read_all(api_key)}
     except InvalidApiKeyError as e:

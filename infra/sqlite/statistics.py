@@ -18,7 +18,9 @@ class StatisticsDatabase:
             profit = self.cur.execute("SELECT SUM(FEE) FROM TRANSACTIONS").fetchone()[0]
             if profit is None:
                 profit = 0.0
-            total_transactions = self.cur.execute("SELECT COUNT() FROM TRANSACTIONS").fetchone()[0]
+            total_transactions = self.cur.execute(
+                "SELECT COUNT() FROM TRANSACTIONS"
+            ).fetchone()[0]
             statistics = Statistic(total_transactions, profit)
             return statistics
         else:

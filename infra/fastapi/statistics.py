@@ -1,21 +1,13 @@
-from uuid import UUID
-
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from core.errors import (
-    DoesNotExistError,
     ErrorMessageEnvelope,
     InvalidApiKeyError,
-    NotEnoughBitcoinError,
-    TransactionBetweenSameWalletError,
-    WalletPermissionError,
 )
 from core.statistic import Statistic
-
-from core.transaction import Transaction
-from infra.fastapi.dependables import ApiKey, TransactionRepositoryDependable, StatisticRepositoryDependable
+from infra.fastapi.dependables import ApiKey, StatisticRepositoryDependable
 
 statistics_api = APIRouter(tags=["Statistics"])
 
@@ -29,14 +21,14 @@ class StatisticEnvelope(BaseModel):
     statistic: StatisticItem
 
 
-@statistics_api.post(
+@statistics_api.get(
     "/statistics",
-    status_code=201,
+    status_code=200,
     response_model=StatisticEnvelope,
-    responses={401: {"model": ErrorMessageEnvelope}}
+    responses={401: {"model": ErrorMessageEnvelope}},
 )
 def get_statistics(
-        api_key: ApiKey, statistics: StatisticRepositoryDependable
+    api_key: ApiKey, statistics: StatisticRepositoryDependable
 ) -> dict[str, Statistic] | JSONResponse:
     try:
         return {"statistic": statistics.get_statistics(api_key)}

@@ -13,8 +13,13 @@ class TransactionsInMemory:
     wallets: WalletsInMemory
     transactions: list[Transaction] = field(default_factory=list)
 
-    def make_transaction(self, from_api_key: str, from_address: UUID, to_address: UUID,
-                         transaction_amount: float) -> Transaction:
+    def make_transaction(
+        self,
+        from_api_key: str,
+        from_address: UUID,
+        to_address: UUID,
+        transaction_amount: float,
+    ) -> Transaction:
         if from_address == to_address:
             raise TransactionBetweenSameWalletError()
 

@@ -29,7 +29,9 @@ class WalletsInMemory:
 
         return wallet
 
-    def read(self, address: UUID, api_key: str, check_permission: bool = True) -> Wallet:
+    def read(
+        self, address: UUID, api_key: str, check_permission: bool = True
+    ) -> Wallet:
         user = self.users.try_authorization(api_key)
         try:
             wallet = self.wallets[address]

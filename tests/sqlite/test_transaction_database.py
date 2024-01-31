@@ -24,16 +24,21 @@ def db() -> Database:
     db.initial()
     return db
 
+
 def test_make_transaction(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     from_wallet = wallets.create(user.api_key)
     to_wallet = wallets.create(user.api_key)
 
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
-    transaction = transactions.make_transaction(user.api_key, from_wallet.address, to_wallet.address, 0.5)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
+    transaction = transactions.make_transaction(
+        user.api_key, from_wallet.address, to_wallet.address, 0.5
+    )
     from_wallet = wallets.read(from_wallet.address, user.api_key, False)
     to_wallet = wallets.read(to_wallet.address, user.api_key, False)
     assert transaction.from_address == from_wallet.address
@@ -48,15 +53,19 @@ def test_make_transaction(db: Database) -> None:
 
 def test_make_transaction_between_two_users(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     from_wallet = wallets.create(user1.api_key)
     to_wallet = wallets.create(user2.api_key)
 
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
-    transaction = transactions.make_transaction(user1.api_key, from_wallet.address, to_wallet.address, 1)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
+    transaction = transactions.make_transaction(
+        user1.api_key, from_wallet.address, to_wallet.address, 1
+    )
     from_wallet = wallets.read(from_wallet.address, user1.api_key, False)
     to_wallet = wallets.read(to_wallet.address, user2.api_key, False)
     assert transaction.from_address == from_wallet.address
@@ -70,15 +79,19 @@ def test_make_transaction_between_two_users(db: Database) -> None:
 
 def test_make_transaction_without_enough_balance(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     from_wallet = wallets.create(user.api_key)
     to_wallet = wallets.create(user.api_key)
 
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
     with pytest.raises(NotEnoughBitcoinError):
-        transactions.make_transaction(user.api_key, from_wallet.address, to_wallet.address, 1.5)
+        transactions.make_transaction(
+            user.api_key, from_wallet.address, to_wallet.address, 1.5
+        )
     db.close_database()
 
 
@@ -89,7 +102,9 @@ def test_make_transaction_between_same_wallet(db: Database) -> None:
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     wallet = wallets.create(user.api_key)
 
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
     with pytest.raises(TransactionBetweenSameWalletError):
         transactions.make_transaction(user.api_key, wallet.address, wallet.address, 0.5)
     db.close_database()
@@ -97,15 +112,21 @@ def test_make_transaction_between_same_wallet(db: Database) -> None:
 
 def test_make_transaction_other_api_key(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
 
     with pytest.raises(WalletPermissionError):
-        transactions.make_transaction(user2.api_key, wallets.create(user1.api_key).address,
-                                      wallets.create(user2.api_key).address, 0.5)
+        transactions.make_transaction(
+            user2.api_key,
+            wallets.create(user1.api_key).address,
+            wallets.create(user2.api_key).address,
+            0.5,
+        )
     db.close_database()
 
 
@@ -113,10 +134,14 @@ def test_make_transaction_unknown_wallet_address(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
 
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
 
     with pytest.raises(DoesNotExistError):
-        transactions.make_transaction(users.create(email="test@gmail.com").api_key, uuid4(), uuid4(), 0.5)
+        transactions.make_transaction(
+            users.create("test@gmail.com").api_key, uuid4(), uuid4(), 0.5
+        )
     db.close_database()
 
 
@@ -125,7 +150,9 @@ def test_make_transaction_unknown_api_key(db: Database) -> None:
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
 
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
 
     with pytest.raises(InvalidApiKeyError):
         transactions.make_transaction(generate_api_key(), uuid4(), uuid4(), 0.5)
@@ -134,11 +161,13 @@ def test_make_transaction_unknown_api_key(db: Database) -> None:
 
 def test_read_all_transactions_empty(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
 
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
 
     assert transactions.read_all(user.api_key) == []
     db.close_database()
@@ -146,16 +175,22 @@ def test_read_all_transactions_empty(db: Database) -> None:
 
 def test_read_all_transactions(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     wallet1 = wallets.create(user1.api_key)
     wallet2 = wallets.create(user2.api_key)
     print(wallet1.address, wallet2.address, "TESTSHI")
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
-    transaction1 = transactions.make_transaction(user1.api_key, wallet1.address, wallet2.address, 0.5)
-    transaction2 = transactions.make_transaction(user2.api_key, wallet2.address, wallet1.address, 0.5)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
+    transaction1 = transactions.make_transaction(
+        user1.api_key, wallet1.address, wallet2.address, 0.5
+    )
+    transaction2 = transactions.make_transaction(
+        user2.api_key, wallet2.address, wallet1.address, 0.5
+    )
     assert transactions.read_all(user1.api_key) == [transaction1, transaction2]
     db.close_database()
 
@@ -163,7 +198,9 @@ def test_read_all_transactions(db: Database) -> None:
 def test_read_all_transactions_unknown_api_key(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
 
     with pytest.raises(InvalidApiKeyError):
         transactions.read_all(generate_api_key())
@@ -175,7 +212,9 @@ def test_get_wallet_transactions_unknown_api_key(db: Database) -> None:
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
 
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
 
     with pytest.raises(InvalidApiKeyError):
         transactions.get_wallet_transactions(generate_api_key(), uuid4())
@@ -186,38 +225,55 @@ def test_get_wallet_transactions_unknown_wallet_address(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
 
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
 
     with pytest.raises(DoesNotExistError):
-        transactions.get_wallet_transactions(users.create(email="test@gmail.com").api_key, uuid4())
+        transactions.get_wallet_transactions(
+            users.create("test@gmail.com").api_key, uuid4()
+        )
     db.close_database()
 
 
 def test_get_wallet_transactions_other_api_key(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
 
     with pytest.raises(WalletPermissionError):
-        transactions.get_wallet_transactions(user2.api_key, wallets.create(user1.api_key).address)
+        transactions.get_wallet_transactions(
+            user2.api_key, wallets.create(user1.api_key).address
+        )
     db.close_database()
 
 
 def test_get_wallet_transactions(db: Database) -> None:
     users = UsersDatabase(db.get_connection(), db.get_cursor())
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     wallet1 = wallets.create(user1.api_key)
     wallet2 = wallets.create(user2.api_key)
 
-    transactions = TransactionsDataBase(db.get_connection(), db.get_cursor(), wallets, users)
-    transaction1 = transactions.make_transaction(user1.api_key, wallet1.address, wallet2.address, 0.5)
-    transaction2 = transactions.make_transaction(user2.api_key, wallet2.address, wallet1.address, 0.5)
+    transactions = TransactionsDataBase(
+        db.get_connection(), db.get_cursor(), wallets, users
+    )
+    transaction1 = transactions.make_transaction(
+        user1.api_key, wallet1.address, wallet2.address, 0.5
+    )
+    transaction2 = transactions.make_transaction(
+        user2.api_key, wallet2.address, wallet1.address, 0.5
+    )
 
-    assert transactions.get_wallet_transactions(user1.api_key, wallet1.address) == [transaction1, transaction2]
+    assert transactions.get_wallet_transactions(user1.api_key, wallet1.address) == [
+        transaction1,
+        transaction2,
+    ]
     db.close_database()

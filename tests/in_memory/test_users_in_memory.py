@@ -9,7 +9,7 @@ from infra.in_memory.users import UsersInMemory
 
 def test_create_user_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     assert user.api_key == ANY
     assert user.id == ANY
@@ -18,15 +18,15 @@ def test_create_user_in_memory() -> None:
 def test_create_same_user_in_memory() -> None:
     users = UsersInMemory()
     email = "test@gmail.com"
-    users.create(email=email)
+    users.create(email)
 
     with pytest.raises(EmailAlreadyExistError):
-        users.create(email=email)
+        users.create(email)
 
 
 def test_read_correct_user_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     result_user = users.try_authorization(user.api_key)
 

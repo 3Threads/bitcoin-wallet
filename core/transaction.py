@@ -12,8 +12,13 @@ class Transaction:
 
 
 class TransactionRepository(Protocol):
-    def make_transaction(self, from_api_key: str, from_address: UUID, to_address: UUID,
-                         transaction_amount: float) -> Transaction:
+    def make_transaction(
+        self,
+        from_api_key: str,
+        from_address: UUID,
+        to_address: UUID,
+        transaction_amount: float,
+    ) -> Transaction:
         pass
 
     def read_all(self, api_key: str) -> list[Transaction]:

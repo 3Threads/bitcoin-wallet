@@ -12,7 +12,7 @@ class UsersDatabase:
     cur: Cursor
 
     def create(self, email: str) -> EmailAlreadyExistError | User:
-        user = User(email=email)
+        user = User(email)
         try:
             self.cur.executemany(
                 "INSERT INTO USERS(ID, EMAIL, API_KEY) VALUES (?, ?, ?)",

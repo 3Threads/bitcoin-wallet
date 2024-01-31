@@ -21,7 +21,9 @@ def test_should_create_wallet(client: TestClient) -> None:
     response = client.post("/wallets", headers={"api_key": api_key})
 
     assert response.status_code == 201
-    assert response.json() == {"wallet": {"address": ANY, "balance": STARTING_BITCOIN_AMOUNT}}
+    assert response.json() == {
+        "wallet": {"address": ANY, "balance": STARTING_BITCOIN_AMOUNT}
+    }
 
 
 def test_should_not_create_product_above_limit(client: TestClient) -> None:
@@ -34,9 +36,7 @@ def test_should_not_create_product_above_limit(client: TestClient) -> None:
     response = client.post("/wallets", headers={"api_key": api_key})
     assert response.status_code == 409
     assert response.json() == {
-        "error": {
-            "message": f"User<{api_key}> reached wallets limit({WALLETS_LIMIT})."
-        }
+        "error": {"message": f"User<{api_key}> reached wallets limit({WALLETS_LIMIT})."}
     }
 
 
@@ -65,11 +65,13 @@ def test_should_persist_wallet(client: TestClient) -> None:
     api_key = create_user_and_get_key(client)
 
     response = client.post("/wallets", headers={"api_key": api_key})
-    wallet_address = response.json()['wallet']['address']
+    wallet_address = response.json()["wallet"]["address"]
     response = client.get(f"/wallets/{wallet_address}", headers={"api_key": api_key})
 
     assert response.status_code == 200
-    assert response.json() == {"wallet": {"address": wallet_address, "balance": STARTING_BITCOIN_AMOUNT}}
+    assert response.json() == {
+        "wallet": {"address": wallet_address, "balance": STARTING_BITCOIN_AMOUNT}
+    }
 
 
 def test_should_not_read_with_invalid_key_wallet(client: TestClient) -> None:
@@ -87,7 +89,7 @@ def test_should_not_read_others_wallet(client: TestClient) -> None:
     api_key2 = create_user_and_get_key(client, "test1@gmail.com")
 
     response = client.post("/wallets", headers={"api_key": api_key1})
-    wallet_address = response.json()['wallet']['address']
+    wallet_address = response.json()["wallet"]["address"]
     response = client.get(f"/wallets/{wallet_address}", headers={"api_key": api_key2})
 
     assert response.status_code == 403

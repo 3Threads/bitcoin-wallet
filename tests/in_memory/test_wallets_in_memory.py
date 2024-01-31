@@ -17,7 +17,7 @@ from infra.in_memory.wallets import WalletsInMemory
 
 def test_create_wallet_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet = wallets.create(user.api_key)
@@ -29,7 +29,7 @@ def test_create_wallet_in_memory() -> None:
 
 def test_create_wallet_reach_limit_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsInMemory(users)
     for i in range(WALLETS_LIMIT):
@@ -48,7 +48,7 @@ def test_create_wallet_with_unknown_key_in_memory() -> None:
 
 def test_read_wallet_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet = wallets.create(user.api_key)
@@ -60,7 +60,7 @@ def test_read_wallet_in_memory() -> None:
 
 def test_read_wallet_with_wrong_key_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet = wallets.create(user.api_key)
@@ -71,7 +71,7 @@ def test_read_wallet_with_wrong_key_in_memory() -> None:
 
 def test_read_unknown_wallet_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsInMemory(users)
 
@@ -81,8 +81,8 @@ def test_read_unknown_wallet_in_memory() -> None:
 
 def test_read_others_wallet_in_memory() -> None:
     users = UsersInMemory()
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet = wallets.create(user1.api_key)
@@ -93,8 +93,8 @@ def test_read_others_wallet_in_memory() -> None:
 
 def test_read_wallet_ignore_permission_in_memory() -> None:
     users = UsersInMemory()
-    user1 = users.create(email="test@gmail.com")
-    user2 = users.create(email="test1@gmail.com")
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet = wallets.create(user1.api_key)
@@ -105,7 +105,7 @@ def test_read_wallet_ignore_permission_in_memory() -> None:
 
 def test_update_balance_in_memory() -> None:
     users = UsersInMemory()
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
     wallets = WalletsInMemory(users)
     wallet = wallets.create(user.api_key)
     wallets.update_balance(wallet.address, 100)
@@ -115,7 +115,7 @@ def test_update_balance_in_memory() -> None:
 
 def test_read_all() -> None:
     users = UsersInMemory()
-    user = users.create(email="test@gmail.com")
+    user = users.create("test@gmail.com")
 
     wallets = WalletsInMemory(users)
     wallet1 = wallets.create(user.api_key)
