@@ -6,8 +6,9 @@ from fastapi.testclient import TestClient
 
 from core.user import generate_api_key
 from infra.constants import STARTING_BITCOIN_AMOUNT, WALLETS_LIMIT
+from infra.fastapi.wallets import create_wallet
 from runner.setup import init_app
-from tests.api.fixture_fuctions import create_user_and_get_key
+from tests.api.fixture_fuctions import create_user_and_get_key, create_wallet_and_get_address
 
 
 @pytest.fixture
@@ -95,4 +96,55 @@ def test_should_not_read_others_wallet(client: TestClient) -> None:
     assert response.status_code == 403
     assert response.json() == {
         "error": {"message": f"User does not have wallet<{wallet_address}>."}
+    }
+
+
+def test_should_get_wallet_transactions(client: TestClient) -> None:
+    api_key = create_user_and_get_key(client)
+    wallet_address1 = create_wallet_and_get_address(client, api_key)
+    wallet_address2 = create_wallet_and_get_address(client, api_key)
+
+    response = client.post(
+        "/transactions",
+        headers={"api_key": api_key},
+        json={
+            "from_address": wallet_address1,
+            "to_address": wallet_address2,
+            "transaction_amount": 0.5,
+        },
+    )
+
+    response = client.get(
+        f"/wallets/{wallet_address1}/transactions", headers={"api_key": api_key}
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {"transactions": [
+        {
+            "from_address": wallet_address1,
+            "to_address": wallet_address2,
+            "transaction_amount": 0.5,
+            "transaction_fee": 0.0}]
+    }
+
+
+def test_should_not_get_wallet_transactions_with_invalid_key(client: TestClient) -> None:
+    unknown_api_key = generate_api_key()
+    response = client.get(f"/wallets/{uuid4()}/transactions", headers={"api_key": unknown_api_key})
+
+    assert response.status_code == 401
+    assert response.json() == {
+        "error": {"message": f"Invalid API key: {unknown_api_key}"}
+    }
+
+
+def test_should_not_get_others_wallet_transactions(client: TestClient) -> None:
+    api_key1 = create_user_and_get_key(client)
+    api_key2 = create_user_and_get_key(client, "test1@gmail.com")
+    wallet_address2 = create_wallet_and_get_address(client, api_key2)
+    response = client.get(f"/wallets/{wallet_address2}/transactions", headers={"api_key": api_key1})
+
+    assert response.status_code == 403
+    assert response.json() == {
+        "error": {"message": f"User does not have wallet<{wallet_address2}>."}
     }
