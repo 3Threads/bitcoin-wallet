@@ -5,7 +5,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from core.user import generate_api_key
-from infra.constants import STARTING_BITCOIN_AMOUNT, WALLETS_LIMIT
+from infra.constants import STARTING_BITCOIN_AMOUNT, WALLETS_LIMIT, FAKE_RATE
 from infra.fastapi.wallets import create_wallet
 from runner.setup import init_app
 from tests.api.fixture_fuctions import create_user_and_get_key, create_wallet_and_get_address
@@ -23,7 +23,8 @@ def test_should_create_wallet(client: TestClient) -> None:
 
     assert response.status_code == 201
     assert response.json() == {
-        "wallet": {"address": ANY, "balance": STARTING_BITCOIN_AMOUNT}
+        "wallet": {"address": ANY, "balance_btc": STARTING_BITCOIN_AMOUNT,
+                   "balance_usd": STARTING_BITCOIN_AMOUNT * FAKE_RATE}
     }
 
 
@@ -71,7 +72,9 @@ def test_should_persist_wallet(client: TestClient) -> None:
 
     assert response.status_code == 200
     assert response.json() == {
-        "wallet": {"address": wallet_address, "balance": STARTING_BITCOIN_AMOUNT}
+        "wallet": {"address": wallet_address,
+                   "balance_btc": STARTING_BITCOIN_AMOUNT,
+                   "balance_usd": STARTING_BITCOIN_AMOUNT * FAKE_RATE}
     }
 
 

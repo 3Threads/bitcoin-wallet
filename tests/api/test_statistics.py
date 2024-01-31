@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from infra.constants import ADMIN_API_KEY
+from infra.constants import ADMIN_API_KEY, FAKE_RATE
 from runner.setup import init_app
 from tests.api.fixture_fuctions import (
     create_user_and_get_key,
@@ -33,7 +33,14 @@ def test_should_get_statistics(client: TestClient) -> None:
     response = client.get("/statistics", headers={"api_key": ADMIN_API_KEY})
 
     assert response.status_code == 200
-    assert response.json() == {"statistic": {"total_transactions": 1, "profit": 0.0075}}
+
+    assert response.json() == {"statistic":
+        {
+            "total_transactions": 1,
+            "profit_btc": 0.0075,
+            "profit_usd": 0.0075 * FAKE_RATE
+        }
+    }
 
 
 def test_should_not_get_statistics(client: TestClient) -> None:

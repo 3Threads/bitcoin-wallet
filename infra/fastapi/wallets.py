@@ -2,6 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter
 from pydantic import BaseModel
+from starlette.responses import JSONResponse
 
 from core.errors import (
     WalletDoesNotExistError,
@@ -10,10 +11,12 @@ from core.errors import (
     WalletPermissionError,
     WalletsLimitError,
 )
+from core.wallet import Wallet
 from infra.fastapi.dependables import (
     ApiKey,
     TransactionRepositoryDependable,
     WalletRepositoryDependable,
+    ConverterDependable,
 )
 from infra.fastapi.transactions import TransactionsListEnvelope
 
@@ -22,7 +25,8 @@ wallets_api = APIRouter(tags=["Wallets"])
 
 class WalletItem(BaseModel):
     address: UUID
-    balance: float
+    balance_btc: float
+    balance_usd: float
 
 
 class WalletItemEnvelope(BaseModel):
@@ -42,9 +46,17 @@ class WalletListEnvelope(BaseModel):
         409: {"model": ErrorMessageEnvelope},
     },
 )
-def create_wallet(api_key: ApiKey, wallets: WalletRepositoryDependable):
+def create_wallet(api_key: ApiKey, wallets: WalletRepositoryDependable, converter: ConverterDependable):
     try:
-        return {"wallet": wallets.create(api_key)}
+        wallet: Wallet = wallets.create(api_key)
+        balance_usd = wallet.balance * converter.get_rate()
+        return {
+            "wallet": {
+                "address": wallet.address,
+                "balance_btc": wallet.balance,
+                'balance_usd': balance_usd
+            }
+        }
     except InvalidApiKeyError as e:
         return e.get_error_json_response(401)
     except WalletsLimitError as e:
@@ -61,9 +73,17 @@ def create_wallet(api_key: ApiKey, wallets: WalletRepositoryDependable):
         404: {"model": ErrorMessageEnvelope},
     },
 )
-def read_wallet(address: UUID, api_key: ApiKey, wallets: WalletRepositoryDependable):
+def read_wallet(address: UUID, api_key: ApiKey, wallets: WalletRepositoryDependable, converter: ConverterDependable):
     try:
-        return {"wallet": wallets.read(address, api_key)}
+        wallet: Wallet = wallets.read(address, api_key)
+        balance_usd = wallet.balance * converter.get_rate()
+        return {
+            "wallet": {
+                "address": wallet.address,
+                "balance_btc": wallet.balance,
+                'balance_usd': balance_usd
+            }
+        }
     except InvalidApiKeyError as e:
         return e.get_error_json_response(401)
     except WalletDoesNotExistError as e:
@@ -83,7 +103,7 @@ def read_wallet(address: UUID, api_key: ApiKey, wallets: WalletRepositoryDependa
     },
 )
 def get_wallet_transactions(
-    address: UUID, api_key: ApiKey, transactions: TransactionRepositoryDependable
+        address: UUID, api_key: ApiKey, transactions: TransactionRepositoryDependable
 ):
     try:
         transactions = transactions.get_wallet_transactions(api_key, address)

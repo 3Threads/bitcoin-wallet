@@ -2,7 +2,8 @@ import os
 
 from fastapi import FastAPI
 
-from infra.constants import DATABASE_NAME, SQL_FILE
+from core.btc_to_usd_converter import APICryptoExchangeRate, FakeCryptoExchangeRate
+from infra.constants import DATABASE_NAME, SQL_FILE, FAKE_RATE
 from infra.fastapi.statistics import statistics_api
 from infra.fastapi.transactions import transactions_api
 from infra.fastapi.users import users_api
@@ -45,5 +46,10 @@ def init_app() -> FastAPI:
             app.state.users, app.state.wallets
         )
         app.state.statistics = StatisticsInMemory(app.state.transactions)
+
+    if os.getenv("CONVERTER_PUBLIC_API", "fake") == "coinconvert":
+        app.state.converter = APICryptoExchangeRate()
+    else:
+        app.state.converter = FakeCryptoExchangeRate()
 
     return app

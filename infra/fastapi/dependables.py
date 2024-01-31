@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import Depends, Header
 from fastapi.requests import Request
 
+from core.btc_to_usd_converter import FakeCryptoExchangeRate, CryptoExchangeRate
 from core.statistic import StatisticRepository
 from core.transaction import TransactionRepository
 from core.user import UserRepository
@@ -40,4 +41,13 @@ def get_statistic_repository(request: Request) -> StatisticRepository:
 
 StatisticRepositoryDependable = (Annotated)[
     StatisticRepository, Depends(get_statistic_repository)
+]
+
+
+def get_converter(request: Request) -> CryptoExchangeRate:
+    return request.app.state.converter  # type: ignore
+
+
+ConverterDependable = (Annotated)[
+    CryptoExchangeRate, Depends(get_converter)
 ]
