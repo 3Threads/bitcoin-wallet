@@ -17,14 +17,14 @@ class ErrorMessageEnvelope(BaseModel):
 
 @dataclass
 class WalletDoesNotExistError(Exception):
-    value: str
+    wallet_address: UUID
 
     def get_error_json_response(self, code: int = 404) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
                 "error": {
-                    "message": f"Wallet with address<{self.value}>"
+                    "message": f"Wallet with address<{self.wallet_address}>"
                     f" does not exist."
                 }
             },

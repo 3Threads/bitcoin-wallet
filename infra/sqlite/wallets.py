@@ -39,7 +39,7 @@ class WalletsDatabase:
         return wallet
 
     def read(
-        self, address: UUID, api_key: str, check_permission: bool = True
+            self, address: UUID, api_key: str, check_permission: bool = True
     ) -> Wallet:
         user = self.users.try_authorization(api_key)
         self.cur.execute(
@@ -48,7 +48,7 @@ class WalletsDatabase:
         )
         result = self.cur.fetchone()
         if result is None:
-            raise WalletDoesNotExistError(str(address))
+            raise WalletDoesNotExistError(address)
 
         wallet = Wallet(UUID(result[0]), UUID(result[1]), result[2])
         if check_permission and wallet.user_id != user.id:
