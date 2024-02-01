@@ -34,7 +34,7 @@ def test_create_wallet(db: Database) -> None:
 
     assert wallet.user_id == user.id
     assert wallet.address == ANY
-    assert wallet.balance == STARTING_BITCOIN_AMOUNT
+    assert wallet.get_balance() == STARTING_BITCOIN_AMOUNT
 
     db.close_database()
 
@@ -135,7 +135,7 @@ def test_update_balance(db: Database) -> None:
 
     wallets.update_balance(wallet.address, 100)
 
-    assert wallets.read(wallet.address, user.api_key).balance == 100
+    assert wallets.read(wallet.address, user.api_key).get_balance() == 100
 
     db.close_database()
 
@@ -154,5 +154,5 @@ def test_read_all(db: Database) -> None:
     all_wallets = wallets.read_all(user.api_key)
 
     assert len(all_wallets) == 2
-    assert all_wallets[0].balance == 100
-    assert all_wallets[1].balance == 200
+    assert all_wallets[0].get_balance() == 100
+    assert all_wallets[1].get_balance() == 200

@@ -33,11 +33,11 @@ class TransactionsDataBase:
         from_wallet = self.wallets.read(from_address, from_api_key)
         to_wallet = self.wallets.read(to_address, from_api_key, False)
 
-        if from_wallet.balance < transaction_amount:
+        if from_wallet.get_balance() < transaction_amount:
             raise NotEnoughBitcoinError(from_address)
 
-        from_new_balance = from_wallet.balance - transaction_amount
-        to_new_balance = from_wallet.balance + transaction_amount
+        from_new_balance = from_wallet.get_balance() - transaction_amount
+        to_new_balance = from_wallet.get_balance() + transaction_amount
 
         fee = 0
         if from_wallet.user_id != to_wallet.user_id:

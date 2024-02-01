@@ -32,7 +32,7 @@ class WalletsDatabase:
             raise WalletsLimitError(api_key)
         self.cur.execute(
             "INSERT INTO WALLETS (ADDRESS, USER_ID, BALANCE) VALUES (?, ?, ?)",
-            [str(wallet.address), str(wallet.user_id), wallet.balance],
+            [str(wallet.address), str(wallet.user_id), wallet.get_balance()],
         )
 
         self.con.commit()

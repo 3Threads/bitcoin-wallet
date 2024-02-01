@@ -53,3 +53,4 @@ class WalletsInMemory:
             if wallet.user_id == user.id:
                 wallets.append(wallet)
         return wallets
+

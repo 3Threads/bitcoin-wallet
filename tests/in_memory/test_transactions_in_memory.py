@@ -32,8 +32,8 @@ def test_make_transaction_in_memory() -> None:
     assert transaction.to_address == to_wallet.address
     assert transaction.transaction_amount == 0.5
     assert transaction.transaction_fee == 0
-    assert from_wallet.balance == 0.5
-    assert to_wallet.balance == 1.5
+    assert from_wallet.get_balance() == 0.5
+    assert to_wallet.get_balance() == 1.5
 
 
 def test_make_transaction_between_two_users_in_memory() -> None:
@@ -54,8 +54,8 @@ def test_make_transaction_between_two_users_in_memory() -> None:
     assert transaction.to_address == to_wallet.address
     assert transaction.transaction_amount == 1
     assert transaction.transaction_fee == 0.015
-    assert from_wallet.balance == 0
-    assert to_wallet.balance == 1.985
+    assert from_wallet.get_balance() == 0
+    assert to_wallet.get_balance() == 1.985
 
 
 def test_make_transaction_without_enough_balance_in_memory() -> None:
