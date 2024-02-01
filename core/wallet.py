@@ -14,6 +14,7 @@ class Wallet:
     def get_balance(self) -> float:
         return float("{:.8f}".format(self.balance))
 
+
 class WalletRepository(Protocol):
     def create(self, api_key: str) -> Wallet:
         pass

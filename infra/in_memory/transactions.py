@@ -3,6 +3,7 @@ from uuid import UUID
 
 from core.errors import NotEnoughBitcoinError, TransactionBetweenSameWalletError
 from core.transaction import Transaction
+from infra.constants import MINIMUM_AMOUNT_OF_BITCOIN
 from infra.in_memory.users import UsersInMemory
 from infra.in_memory.wallets import WalletsInMemory
 
@@ -26,16 +27,22 @@ class TransactionsInMemory:
         from_wallet = self.wallets.read(from_address, from_api_key)
         to_wallet = self.wallets.read(to_address, from_api_key, False)
 
-        if from_wallet.balance < transaction_amount:
+        transaction_amount = round(transaction_amount, 8)
+
+        if transaction_amount < MINIMUM_AMOUNT_OF_BITCOIN:
+            transaction_amount = MINIMUM_AMOUNT_OF_BITCOIN
+
+        if from_wallet.get_balance() < transaction_amount:
             raise NotEnoughBitcoinError(from_address)
 
         from_new_balance = from_wallet.get_balance() - transaction_amount
-        to_new_balance = from_wallet.get_balance() + transaction_amount
+        to_new_balance = to_wallet.get_balance() + transaction_amount
 
         fee = 0
         if from_wallet.user_id != to_wallet.user_id:
             fee = transaction_amount * 1.5 / 100
-        print(fee, " fee")
+        if fee < MINIMUM_AMOUNT_OF_BITCOIN and fee != 0:
+            fee = MINIMUM_AMOUNT_OF_BITCOIN
         to_new_balance -= fee
 
         self.wallets.update_balance(from_address, from_new_balance)
