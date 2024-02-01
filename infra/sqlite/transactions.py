@@ -1,3 +1,4 @@
+import math
 from dataclasses import dataclass
 from sqlite3 import Connection, Cursor
 from uuid import UUID
@@ -29,10 +30,7 @@ class TransactionsDataBase:
         from_wallet = self.wallets.read(from_address, from_api_key)
         to_wallet = self.wallets.read(to_address, from_api_key, False)
 
-        transaction_amount = round(transaction_amount, 8)
-
-        if transaction_amount < MINIMUM_AMOUNT_OF_BITCOIN:
-            transaction_amount = MINIMUM_AMOUNT_OF_BITCOIN
+        transaction_amount = math.ceil(transaction_amount * 10**8) / 10**8
 
         if from_wallet.get_balance() < transaction_amount:
             raise NotEnoughBitcoinError(from_address)
