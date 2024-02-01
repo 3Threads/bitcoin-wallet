@@ -4,8 +4,8 @@ from uuid import uuid4
 import pytest
 
 from core.errors import (
-    WalletDoesNotExistError,
     InvalidApiKeyError,
+    WalletDoesNotExistError,
     WalletPermissionError,
     WalletsLimitError,
 )

@@ -4,14 +4,14 @@ from uuid import uuid4
 import pytest
 
 from core.errors import (
-    WalletDoesNotExistError,
     InvalidApiKeyError,
     NotEnoughBitcoinError,
     TransactionBetweenSameWalletError,
+    WalletDoesNotExistError,
     WalletPermissionError,
 )
 from core.user import generate_api_key
-from infra.constants import SQL_FILE_TEST, MINIMUM_AMOUNT_OF_BITCOIN
+from infra.constants import MINIMUM_AMOUNT_OF_BITCOIN, SQL_FILE_TEST
 from infra.sqlite.database_connect import Database
 from infra.sqlite.transactions import TransactionsDataBase
 from infra.sqlite.users import UsersDatabase
@@ -90,7 +90,10 @@ def test_transaction_less_then_one_satoshi(db: Database) -> None:
         db.get_connection(), db.get_cursor(), wallets, users
     )
     transaction = transactions.make_transaction(
-        user1.api_key, from_wallet.address, to_wallet.address, 0.5 * MINIMUM_AMOUNT_OF_BITCOIN
+        user1.api_key,
+        from_wallet.address,
+        to_wallet.address,
+        0.5 * MINIMUM_AMOUNT_OF_BITCOIN,
     )
     from_wallet = wallets.read(from_wallet.address, user1.api_key, False)
     to_wallet = wallets.read(to_wallet.address, user2.api_key, False)
@@ -113,7 +116,10 @@ def test_double_transaction_with_less_then_one_satoshi_fee(db: Database) -> None
         db.get_connection(), db.get_cursor(), wallets, users
     )
     transaction = transactions.make_transaction(
-        user1.api_key, from_wallet.address, to_wallet.address, 1 - 2 * MINIMUM_AMOUNT_OF_BITCOIN
+        user1.api_key,
+        from_wallet.address,
+        to_wallet.address,
+        1 - 2 * MINIMUM_AMOUNT_OF_BITCOIN,
     )
     from_wallet = wallets.read(from_wallet.address, user1.api_key, False)
     to_wallet = wallets.read(to_wallet.address, user2.api_key, False)
@@ -125,7 +131,10 @@ def test_double_transaction_with_less_then_one_satoshi_fee(db: Database) -> None
     assert to_wallet.get_balance() == 1.98499998
 
     transaction2 = transactions.make_transaction(
-        user1.api_key, from_wallet.address, to_wallet.address, 1.5 * MINIMUM_AMOUNT_OF_BITCOIN
+        user1.api_key,
+        from_wallet.address,
+        to_wallet.address,
+        1.5 * MINIMUM_AMOUNT_OF_BITCOIN,
     )
     from_wallet = wallets.read(from_wallet.address, user1.api_key, False)
     to_wallet = wallets.read(to_wallet.address, user2.api_key, False)

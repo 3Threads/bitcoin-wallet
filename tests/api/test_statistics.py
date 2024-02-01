@@ -34,11 +34,11 @@ def test_should_get_statistics(client: TestClient) -> None:
 
     assert response.status_code == 200
 
-    assert response.json() == {"statistic":
-        {
+    assert response.json() == {
+        "statistic": {
             "total_transactions": 1,
             "profit_btc": 0.0075,
-            "profit_usd": 0.0075 * FAKE_RATE
+            "profit_usd": 0.0075 * FAKE_RATE,
         }
     }
 

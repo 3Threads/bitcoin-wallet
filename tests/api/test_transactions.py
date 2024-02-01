@@ -99,7 +99,7 @@ def test_make_transaction_same_wallet(client: TestClient) -> None:
 
     assert response.status_code == 405
     assert response.json() == {
-        "error": {"message": f"Transaction between one wallet is restricted."}
+        "error": {"message": "Transaction between one wallet is restricted."}
     }
 
 
@@ -143,7 +143,8 @@ def test_make_transaction_not_enough_bitcoin(client: TestClient) -> None:
     assert response.status_code == 409
     assert response.json() == {
         "error": {
-            "message": f"Not enough bitcoin on the wallet with address<{wallet_address1}>."
+            "message": "Not enough bitcoin on the wallet with address"
+            f"<{wallet_address1}>."
         }
     }
 
@@ -163,7 +164,7 @@ def test_should_persist_transactions(client: TestClient) -> None:
         },
     )
 
-    response = client.get(f"/transactions", headers={"api_key": api_key})
+    response = client.get("/transactions", headers={"api_key": api_key})
 
     assert response.status_code == 200
     assert response.json() == {

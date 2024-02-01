@@ -3,7 +3,7 @@ import os
 from fastapi import FastAPI
 
 from core.btc_to_usd_converter import APICryptoExchangeRate, FakeCryptoExchangeRate
-from infra.constants import DATABASE_NAME, SQL_FILE, FAKE_RATE
+from infra.constants import DATABASE_NAME, SQL_FILE
 from infra.fastapi.statistics import statistics_api
 from infra.fastapi.transactions import transactions_api
 from infra.fastapi.users import users_api

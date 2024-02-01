@@ -1,4 +1,3 @@
-import bdb
 import os
 from unittest.mock import ANY
 from uuid import uuid4
@@ -6,8 +5,8 @@ from uuid import uuid4
 import pytest
 
 from core.errors import (
-    WalletDoesNotExistError,
     InvalidApiKeyError,
+    WalletDoesNotExistError,
     WalletPermissionError,
     WalletsLimitError,
 )

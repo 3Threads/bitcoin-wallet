@@ -1,13 +1,8 @@
 from dataclasses import dataclass
-from sqlite3 import Connection
-from sqlite3 import Cursor
+from sqlite3 import Connection, Cursor
 from uuid import UUID
 
-from core.errors import (
-    TransactionBetweenSameWalletError,
-    NotEnoughBitcoinError,
-    WalletDoesNotExistError,
-)
+from core.errors import NotEnoughBitcoinError, TransactionBetweenSameWalletError
 from core.transaction import Transaction
 from infra.constants import MINIMUM_AMOUNT_OF_BITCOIN
 from infra.sqlite.users import UsersDatabase
@@ -64,7 +59,7 @@ class TransactionsDataBase:
         return transaction
 
     def read_all(self, api_key: str) -> list[Transaction]:
-        user = self.users.try_authorization(api_key)
+        self.users.try_authorization(api_key)
         wallets = self.wallets.read_all(api_key)
         transactions = []
         for wallet in wallets:

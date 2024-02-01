@@ -1,10 +1,9 @@
 from dataclasses import dataclass
-from sqlite3 import Connection, Cursor, IntegrityError
+from sqlite3 import Connection, Cursor
 from uuid import UUID
 
 from core.errors import (
     WalletDoesNotExistError,
-    InvalidApiKeyError,
     WalletPermissionError,
     WalletsLimitError,
 )
@@ -39,7 +38,7 @@ class WalletsDatabase:
         return wallet
 
     def read(
-            self, address: UUID, api_key: str, check_permission: bool = True
+        self, address: UUID, api_key: str, check_permission: bool = True
     ) -> Wallet:
         user = self.users.try_authorization(api_key)
         self.cur.execute(

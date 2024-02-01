@@ -3,10 +3,10 @@ from uuid import uuid4
 import pytest
 
 from core.errors import (
-    WalletDoesNotExistError,
     InvalidApiKeyError,
     NotEnoughBitcoinError,
     TransactionBetweenSameWalletError,
+    WalletDoesNotExistError,
     WalletPermissionError,
 )
 from core.user import generate_api_key
@@ -70,12 +70,16 @@ def test_transaction_less_then_one_satishi() -> None:
 
     transactions = TransactionsInMemory(users, wallets)
     transaction = transactions.make_transaction(
-        user1.api_key, from_wallet.address, to_wallet.address, 0.5 * MINIMUM_AMOUNT_OF_BITCOIN
+        user1.api_key,
+        from_wallet.address,
+        to_wallet.address,
+        0.5 * MINIMUM_AMOUNT_OF_BITCOIN,
     )
     assert transaction.from_address == from_wallet.address
     assert transaction.to_address == to_wallet.address
     assert from_wallet.get_balance() == 1 - MINIMUM_AMOUNT_OF_BITCOIN
     assert to_wallet.get_balance() == 1
+
 
 def test_double_transaction_with_less_then_one_satoshi_fee() -> None:
     users = UsersInMemory()
@@ -88,7 +92,10 @@ def test_double_transaction_with_less_then_one_satoshi_fee() -> None:
 
     transactions = TransactionsInMemory(users, wallets)
     transaction = transactions.make_transaction(
-        user1.api_key, from_wallet.address, to_wallet.address, 1 - 2 * MINIMUM_AMOUNT_OF_BITCOIN
+        user1.api_key,
+        from_wallet.address,
+        to_wallet.address,
+        1 - 2 * MINIMUM_AMOUNT_OF_BITCOIN,
     )
     assert transaction.from_address == from_wallet.address
     assert transaction.to_address == to_wallet.address
@@ -96,7 +103,10 @@ def test_double_transaction_with_less_then_one_satoshi_fee() -> None:
     assert to_wallet.get_balance() == 1.98499998
 
     transaction2 = transactions.make_transaction(
-        user1.api_key, from_wallet.address, to_wallet.address, 1.5 * MINIMUM_AMOUNT_OF_BITCOIN
+        user1.api_key,
+        from_wallet.address,
+        to_wallet.address,
+        1.5 * MINIMUM_AMOUNT_OF_BITCOIN,
     )
 
     assert transaction2.from_address == from_wallet.address

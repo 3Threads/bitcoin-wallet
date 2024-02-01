@@ -1,4 +1,4 @@
-from core.btc_to_usd_converter import FakeCryptoExchangeRate, CryptoConverter, APICryptoExchangeRate
+from core.btc_to_usd_converter import CryptoConverter, FakeCryptoExchangeRate
 
 # import pytest
 
