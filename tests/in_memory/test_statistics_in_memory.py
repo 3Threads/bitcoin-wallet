@@ -16,7 +16,7 @@ def test_get_empty_statistics_in_memory() -> None:
     transactions = TransactionsInMemory(users, wallets)
     statistics = StatisticsInMemory(transactions)
 
-    assert statistics.get_statistics(ADMIN_API_KEY) == Statistic(0, 0.0)
+    assert statistics.get_statistic(ADMIN_API_KEY) == Statistic(0, 0.0)
 
 
 def test_get_statistics_in_memory() -> None:
@@ -34,7 +34,7 @@ def test_get_statistics_in_memory() -> None:
 
     statistics = StatisticsInMemory(transactions)
 
-    assert statistics.get_statistics(ADMIN_API_KEY) == Statistic(2, 0.03)
+    assert statistics.get_statistic(ADMIN_API_KEY) == Statistic(2, 0.03)
 
 
 def test_get_statistics_unknown_api_key_in_memory() -> None:
@@ -44,4 +44,4 @@ def test_get_statistics_unknown_api_key_in_memory() -> None:
     statistics = StatisticsInMemory(transactions)
 
     with pytest.raises(InvalidApiKeyError):
-        statistics.get_statistics(generate_api_key())
+        statistics.get_statistic(generate_api_key())

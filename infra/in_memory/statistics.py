@@ -10,7 +10,7 @@ from infra.in_memory.transactions import TransactionsInMemory
 class StatisticsInMemory:
     transactions: TransactionsInMemory
 
-    def get_statistics(self, admin_api_key: str) -> Statistic:
+    def get_statistic(self, admin_api_key: str) -> Statistic:
         if admin_api_key == ADMIN_API_KEY:
             profit = sum(tr.transaction_fee for tr in self.transactions.transactions)
             statistics = Statistic(len(self.transactions.transactions), profit)

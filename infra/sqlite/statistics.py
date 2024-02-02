@@ -13,7 +13,7 @@ class StatisticsDatabase:
     cur: Cursor
     transactions: TransactionsDataBase
 
-    def get_statistics(self, admin_api_key: str) -> Statistic:
+    def get_statistic(self, admin_api_key: str) -> Statistic:
         if admin_api_key == ADMIN_API_KEY:
             profit = self.cur.execute("SELECT SUM(FEE) FROM TRANSACTIONS").fetchone()[0]
             if profit is None:
