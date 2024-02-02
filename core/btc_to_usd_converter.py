@@ -28,11 +28,3 @@ class FakeCryptoExchangeRate:
 
     def get_rate(self) -> float:
         return self.rate
-
-
-@dataclass
-class CryptoConverter:
-    exchange_rate: CryptoExchangeRate
-
-    def convert(self, amount: float) -> float:
-        return amount * self.exchange_rate.get_rate()
