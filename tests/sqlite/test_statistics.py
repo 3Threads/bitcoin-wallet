@@ -6,7 +6,6 @@ from core.errors import InvalidApiKeyError
 from core.statistic import Statistic
 from core.user import generate_api_key
 from infra.constants import ADMIN_API_KEY, SQL_FILE_TEST
-from infra.in_memory.statistics import StatisticsInMemory
 from infra.sqlite.database_connect import Database
 from infra.sqlite.statistics import StatisticsDatabase
 from infra.sqlite.transactions import TransactionsDataBase

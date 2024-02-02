@@ -4,8 +4,8 @@ from uuid import uuid4
 import pytest
 
 from core.errors import (
-    WalletDoesNotExistError,
     InvalidApiKeyError,
+    WalletDoesNotExistError,
     WalletPermissionError,
     WalletsLimitError,
 )
@@ -110,7 +110,7 @@ def test_update_balance_in_memory() -> None:
     wallet = wallets.create(user.api_key)
     wallets.update_balance(wallet.address, 100)
 
-    assert wallets.read(wallet.address, user.api_key).balance == 100
+    assert wallets.read(wallet.address, user.api_key).get_balance() == 100
 
 
 def test_read_all() -> None:
@@ -127,7 +127,7 @@ def test_read_all() -> None:
     all_wallets = wallets.read_all(user.api_key)
 
     assert len(all_wallets) == 2
-    assert all_wallets[0].balance == 100
-    assert all_wallets[1].balance == 200
+    assert all_wallets[0].get_balance() == 100
+    assert all_wallets[1].get_balance() == 200
     assert all_wallets[1] == wallet2
     assert all_wallets[0] == wallet1

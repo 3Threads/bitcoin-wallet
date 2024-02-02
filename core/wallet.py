@@ -11,6 +11,9 @@ class Wallet:
     address: UUID = field(default_factory=uuid4)
     balance: float = STARTING_BITCOIN_AMOUNT
 
+    def get_balance(self) -> float:
+        return float("{:.8f}".format(self.balance))
+
 
 class WalletRepository(Protocol):
     def create(self, api_key: str) -> Wallet:
@@ -22,5 +25,5 @@ class WalletRepository(Protocol):
     def read_all(self, api_key: str) -> list[Wallet]:
         pass
 
-    def update_balance(self, param: float) -> None:
+    def update_balance(self, address: UUID, new_balance: float) -> None:
         pass

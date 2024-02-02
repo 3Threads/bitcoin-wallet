@@ -3,13 +3,14 @@ from uuid import uuid4
 import pytest
 
 from core.errors import (
-    WalletDoesNotExistError,
     InvalidApiKeyError,
     NotEnoughBitcoinError,
     TransactionBetweenSameWalletError,
+    WalletDoesNotExistError,
     WalletPermissionError,
 )
 from core.user import generate_api_key
+from infra.constants import MINIMUM_AMOUNT_OF_BITCOIN
 from infra.in_memory.transactions import TransactionsInMemory
 from infra.in_memory.users import UsersInMemory
 from infra.in_memory.wallets import WalletsInMemory
@@ -32,8 +33,8 @@ def test_make_transaction_in_memory() -> None:
     assert transaction.to_address == to_wallet.address
     assert transaction.transaction_amount == 0.5
     assert transaction.transaction_fee == 0
-    assert from_wallet.balance == 0.5
-    assert to_wallet.balance == 1.5
+    assert from_wallet.get_balance() == 0.5
+    assert to_wallet.get_balance() == 1.5
 
 
 def test_make_transaction_between_two_users_in_memory() -> None:
@@ -54,8 +55,64 @@ def test_make_transaction_between_two_users_in_memory() -> None:
     assert transaction.to_address == to_wallet.address
     assert transaction.transaction_amount == 1
     assert transaction.transaction_fee == 0.015
-    assert from_wallet.balance == 0
-    assert to_wallet.balance == 1.985
+    assert from_wallet.get_balance() == 0
+    assert to_wallet.get_balance() == 1.985
+
+
+def test_transaction_less_then_one_satishi() -> None:
+    users = UsersInMemory()
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
+
+    wallets = WalletsInMemory(users)
+    from_wallet = wallets.create(user1.api_key)
+    to_wallet = wallets.create(user2.api_key)
+
+    transactions = TransactionsInMemory(users, wallets)
+    transaction = transactions.make_transaction(
+        user1.api_key,
+        from_wallet.address,
+        to_wallet.address,
+        0.5 * MINIMUM_AMOUNT_OF_BITCOIN,
+    )
+    assert transaction.from_address == from_wallet.address
+    assert transaction.to_address == to_wallet.address
+    assert from_wallet.get_balance() == 1 - MINIMUM_AMOUNT_OF_BITCOIN
+    assert to_wallet.get_balance() == 1
+
+
+def test_double_transaction_with_less_then_one_satoshi_fee() -> None:
+    users = UsersInMemory()
+    user1 = users.create("test@gmail.com")
+    user2 = users.create("test1@gmail.com")
+
+    wallets = WalletsInMemory(users)
+    from_wallet = wallets.create(user1.api_key)
+    to_wallet = wallets.create(user2.api_key)
+
+    transactions = TransactionsInMemory(users, wallets)
+    transaction = transactions.make_transaction(
+        user1.api_key,
+        from_wallet.address,
+        to_wallet.address,
+        1 - 2 * MINIMUM_AMOUNT_OF_BITCOIN,
+    )
+    assert transaction.from_address == from_wallet.address
+    assert transaction.to_address == to_wallet.address
+    assert from_wallet.get_balance() == 2 * MINIMUM_AMOUNT_OF_BITCOIN
+    assert to_wallet.get_balance() == 1.98499998
+
+    transaction2 = transactions.make_transaction(
+        user1.api_key,
+        from_wallet.address,
+        to_wallet.address,
+        1.5 * MINIMUM_AMOUNT_OF_BITCOIN,
+    )
+
+    assert transaction2.from_address == from_wallet.address
+    assert transaction2.to_address == to_wallet.address
+    assert to_wallet.get_balance() == 1.98499999
+    assert from_wallet.get_balance() == 0
 
 
 def test_make_transaction_without_enough_balance_in_memory() -> None:

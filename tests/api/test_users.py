@@ -25,4 +25,5 @@ def test_should_not_create_same_user(client: TestClient) -> None:
     response = client.post("/users", json={"email": email})
     assert response.status_code == 409
     assert response.json() == {
-        "error": {"message": f"The email: {email} already exists."}}
+        "error": {"message": f"The email: {email} already exists."}
+    }
