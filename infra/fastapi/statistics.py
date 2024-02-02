@@ -34,12 +34,12 @@ def get_statistics(
     converter: ConverterDependable,
 ) -> JSONResponse | dict[str, dict[str, str | float]]:
     try:
-        statistics = statistics.get_statistic(api_key)
-        profit_btc = statistics.profit
+        statistic = statistics.get_statistic(api_key)
+        profit_btc = statistic.profit
         profit_usd = profit_btc * converter.get_rate()
         return {
             "statistic": {
-                "total_transactions": statistics.total_transactions,
+                "total_transactions": statistic.total_transactions,
                 "profit_btc": profit_btc,
                 "profit_usd": profit_usd,
             }

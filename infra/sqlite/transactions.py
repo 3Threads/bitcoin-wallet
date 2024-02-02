@@ -36,7 +36,7 @@ class TransactionsDataBase:
             raise NotEnoughBitcoinError(from_address)
         from_new_balance = from_wallet.get_balance() - transaction_amount
         to_new_balance = to_wallet.get_balance() + transaction_amount
-        fee = 0
+        fee = 0.0
         if from_wallet.user_id != to_wallet.user_id:
             fee = transaction_amount * 1.5 / 100
         if fee < MINIMUM_AMOUNT_OF_BITCOIN and fee != 0:

@@ -20,7 +20,7 @@ class WalletRepository(Protocol):
         pass
 
     def read(
-            self, address: UUID, api_key: str, check_permission: bool = True
+        self, address: UUID, api_key: str, check_permission: bool = True
     ) -> Wallet:
         pass
 

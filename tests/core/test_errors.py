@@ -7,7 +7,7 @@ from infra.constants import WALLETS_LIMIT
 
 def test_wallet_does_not_exist_error() -> None:
     unknown_id = uuid4()
-    json = WalletDoesNotExistError(str(unknown_id)).get_error_json_response()
+    json = WalletDoesNotExistError(unknown_id).get_error_json_response()
     assert json.status_code == 404
     assert (
         json.body.decode("utf-8")

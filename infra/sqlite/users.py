@@ -11,7 +11,7 @@ class UsersDatabase:
     con: Connection
     cur: Cursor
 
-    def create(self, email: str) -> EmailAlreadyExistError | User:
+    def create(self, email: str) -> User:
         user = User(email)
         try:
             self.cur.executemany(

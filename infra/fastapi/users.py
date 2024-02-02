@@ -1,8 +1,8 @@
 from uuid import UUID
 
 from fastapi import APIRouter
-from pydantic import BaseModel
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 from core.errors import EmailAlreadyExistError, ErrorMessageEnvelope
 from core.user import User

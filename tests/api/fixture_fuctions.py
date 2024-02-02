@@ -10,5 +10,5 @@ def create_user_and_get_key(client: TestClient, email: str = "test@gmail.com") -
 
 def create_wallet_and_get_address(client: TestClient, api_key: str) -> str:
     response = client.post("/wallets", headers={"api_key": api_key})
-    wallet_address = response.json()["wallet"]["address"]
+    wallet_address: str = response.json()["wallet"]["address"]
     return wallet_address

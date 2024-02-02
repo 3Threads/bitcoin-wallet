@@ -9,7 +9,7 @@ from core.user import User
 class UsersInMemory:
     users: dict[UUID, User] = field(default_factory=dict)
 
-    def create(self, email: str) -> EmailAlreadyExistError | User:
+    def create(self, email: str) -> User:
         for user_id, user in self.users.items():
             if user.email == email:
                 raise EmailAlreadyExistError(email)
