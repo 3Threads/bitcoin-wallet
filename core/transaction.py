@@ -17,7 +17,6 @@ class Transaction:
 
 
 class TransactionRepository(ABC):
-
     def _prepare_transaction(
         self,
         from_api_key: str,
