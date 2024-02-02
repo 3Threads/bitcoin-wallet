@@ -19,11 +19,13 @@ class WalletRepository(Protocol):
     def create(self, api_key: str) -> Wallet:
         pass
 
-    def read(self, address: str, api_key: str) -> Wallet:
-        pass
-
-    def read_all(self, api_key: str) -> list[Wallet]:
+    def read(
+            self, address: UUID, api_key: str, check_permission: bool = True
+    ) -> Wallet:
         pass
 
     def update_balance(self, address: UUID, new_balance: float) -> None:
+        pass
+
+    def read_all(self, api_key: str) -> list[Wallet]:
         pass
