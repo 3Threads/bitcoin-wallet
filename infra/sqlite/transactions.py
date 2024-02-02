@@ -1,17 +1,14 @@
-import math
 from dataclasses import dataclass
 from sqlite3 import Connection, Cursor
 from uuid import UUID
 
-from core.errors import NotEnoughBitcoinError, TransactionBetweenSameWalletError
-from core.transaction import Transaction
-from infra.constants import MINIMUM_AMOUNT_OF_BITCOIN
+from core.transaction import Transaction, TransactionRepository
 from infra.sqlite.users import UsersDatabase
 from infra.sqlite.wallets import WalletsDatabase
 
 
 @dataclass
-class TransactionsDataBase:
+class TransactionsDataBase(TransactionRepository):
     con: Connection
     cur: Cursor
     wallets: WalletsDatabase
@@ -24,34 +21,20 @@ class TransactionsDataBase:
         to_address: UUID,
         transaction_amount: float,
     ) -> Transaction:
-        if from_address == to_address:
-            raise TransactionBetweenSameWalletError()
-
-        from_wallet = self.wallets.read(from_address, from_api_key)
-        to_wallet = self.wallets.read(to_address, from_api_key, False)
-
-        transaction_amount = math.ceil(transaction_amount * 10**8) / 10**8
-
-        if from_wallet.get_balance() < transaction_amount:
-            raise NotEnoughBitcoinError(from_address)
-        from_new_balance = from_wallet.get_balance() - transaction_amount
-        to_new_balance = to_wallet.get_balance() + transaction_amount
-        fee = 0.0
-        if from_wallet.user_id != to_wallet.user_id:
-            fee = transaction_amount * 1.5 / 100
-        if fee < MINIMUM_AMOUNT_OF_BITCOIN and fee != 0:
-            fee = MINIMUM_AMOUNT_OF_BITCOIN
-        to_new_balance -= fee
-
-        self.wallets.update_balance(from_address, from_new_balance)
-        self.wallets.update_balance(to_address, to_new_balance)
-        transaction = Transaction(from_address, to_address, transaction_amount, fee)
+        transaction = self._prepare_transaction(
+            from_api_key, from_address, to_address, transaction_amount, self.wallets
+        )
         self.cur.execute(
             """
                     INSERT INTO TRANSACTIONS (FROM_ADDRESS, TO_ADDRESS, AMOUNT, FEE)
                     VALUES (?, ?, ?, ?);
                 """,
-            (str(from_address), str(to_address), transaction_amount, fee),
+            (
+                str(from_address),
+                str(to_address),
+                transaction.transaction_amount,
+                transaction.transaction_fee,
+            ),
         )
         self.con.commit()
         return transaction
