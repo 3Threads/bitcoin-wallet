@@ -13,7 +13,6 @@ class CryptoExchangeRate(Protocol):
 
 @dataclass
 class APICryptoExchangeRate:
-
     def get_rate(self) -> float:
         response = httpx.get(
             "https://api.coinconvert.net/convert/btc/usd",

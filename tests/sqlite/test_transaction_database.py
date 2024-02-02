@@ -249,7 +249,7 @@ def test_read_all_transactions(db: Database) -> None:
     wallets = WalletsDatabase(db.get_connection(), db.get_cursor(), users)
     wallet1 = wallets.create(user1.api_key)
     wallet2 = wallets.create(user2.api_key)
-    print(wallet1.address, wallet2.address, "TESTSHI")
+
     transactions = TransactionsDataBase(
         db.get_connection(), db.get_cursor(), wallets, users
     )
