@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="pytest in tests" type="tests" factoryName="py.test" nameIsGenerated="true">
-    <module name="bitcoin-wallet" />
+    <module name="bitcoin_wallet" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />

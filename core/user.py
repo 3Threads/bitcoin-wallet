@@ -6,7 +6,7 @@ from uuid import UUID, uuid4
 from infra.constants import TOKEN_HEX_BYTES_NUM
 
 
-def generate_api_key():
+def generate_api_key() -> str:
     return secrets.token_hex(TOKEN_HEX_BYTES_NUM)
 
 

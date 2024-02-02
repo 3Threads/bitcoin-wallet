@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run API SQLITE" type="PythonConfigurationType" factoryName="Python">
-    <module name="bitcoin-wallet" />
+    <module name="bitcoin_wallet" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
@@ -10,7 +10,7 @@
       <env name="CONVERTER_PUBLIC_API" value="coinconvert" />
     </envs>
     <option name="SDK_HOME" value="" />
-    <option name="SDK_NAME" value="Python 3.11 (bitcoin-wallet)" />
+    <option name="SDK_NAME" value="Python 3.11 (bitcoin_wallet)" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/runner" />
     <option name="IS_MODULE_SDK" value="false" />
     <option name="ADD_CONTENT_ROOTS" value="true" />

@@ -20,7 +20,7 @@ class APICryptoExchangeRate:
             params={"amount": 1},
         )
 
-        return response.json()["USD"]
+        return float(response.json()["USD"])
 
 
 @dataclass
