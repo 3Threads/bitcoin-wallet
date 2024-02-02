@@ -45,4 +45,4 @@ def get_statistics(
             }
         }
     except InvalidApiKeyError as e:
-        return e.get_error_json_response(401)
+        return e.get_error_json_response()

@@ -30,7 +30,7 @@ def get_transaction_repository(request: Request) -> TransactionRepository:
     return request.app.state.transactions  # type: ignore
 
 
-TransactionRepositoryDependable = (Annotated)[
+TransactionRepositoryDependable = Annotated[
     TransactionRepository, Depends(get_transaction_repository)
 ]
 
@@ -39,7 +39,7 @@ def get_statistic_repository(request: Request) -> StatisticRepository:
     return request.app.state.statistics  # type: ignore
 
 
-StatisticRepositoryDependable = (Annotated)[
+StatisticRepositoryDependable = Annotated[
     StatisticRepository, Depends(get_statistic_repository)
 ]
 
@@ -48,4 +48,4 @@ def get_converter(request: Request) -> CryptoExchangeRate:
     return request.app.state.converter  # type: ignore
 
 
-ConverterDependable = (Annotated)[CryptoExchangeRate, Depends(get_converter)]
+ConverterDependable = Annotated[CryptoExchangeRate, Depends(get_converter)]

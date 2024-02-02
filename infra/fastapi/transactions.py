@@ -60,15 +60,15 @@ def make_transaction(
         transaction = transactions.make_transaction(api_key, **request.model_dump())
         return {"transaction": transaction}
     except NotEnoughBitcoinError as e:
-        return e.get_error_json_response(409)
+        return e.get_error_json_response()
     except TransactionBetweenSameWalletError as e:
-        return e.get_error_json_response(405)
+        return e.get_error_json_response()
     except WalletPermissionError as e:
-        return e.get_error_json_response(403)
+        return e.get_error_json_response()
     except WalletDoesNotExistError as e:
-        return e.get_error_json_response(404)
+        return e.get_error_json_response()
     except InvalidApiKeyError as e:
-        return e.get_error_json_response(401)
+        return e.get_error_json_response()
 
 
 @transactions_api.get(
@@ -83,4 +83,4 @@ def read_all_transactions(
     try:
         return {"transactions": transactions.read_all(api_key)}
     except InvalidApiKeyError as e:
-        return e.get_error_json_response(401)
+        return e.get_error_json_response()

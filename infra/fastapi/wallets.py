@@ -59,9 +59,9 @@ def create_wallet(
             }
         }
     except InvalidApiKeyError as e:
-        return e.get_error_json_response(401)
+        return e.get_error_json_response()
     except WalletsLimitError as e:
-        return e.get_error_json_response(409)
+        return e.get_error_json_response()
 
 
 @wallets_api.get(
@@ -91,11 +91,11 @@ def read_wallet(
             }
         }
     except InvalidApiKeyError as e:
-        return e.get_error_json_response(401)
+        return e.get_error_json_response()
     except WalletDoesNotExistError as e:
-        return e.get_error_json_response(404)
+        return e.get_error_json_response()
     except WalletPermissionError as e:
-        return e.get_error_json_response(403)
+        return e.get_error_json_response()
 
 
 @wallets_api.get(
@@ -115,8 +115,8 @@ def get_wallet_transactions(
         transactions = transactions.get_wallet_transactions(api_key, address)
         return {"transactions": transactions}
     except InvalidApiKeyError as e:
-        return e.get_error_json_response(401)
+        return e.get_error_json_response()
     except WalletDoesNotExistError as e:
-        return e.get_error_json_response(404)
+        return e.get_error_json_response()
     except WalletPermissionError as e:
-        return e.get_error_json_response(403)
+        return e.get_error_json_response()

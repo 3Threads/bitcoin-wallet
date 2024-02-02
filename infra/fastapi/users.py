@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter
 from pydantic import BaseModel
-from starlette.responses import JSONResponse
+from fastapi.responses import JSONResponse
 
 from core.errors import EmailAlreadyExistError, ErrorMessageEnvelope
 from core.user import User
@@ -38,4 +38,4 @@ def register_user(
     try:
         return {"user": users.create(email)}
     except EmailAlreadyExistError as e:
-        return e.get_error_json_response(409)
+        return e.get_error_json_response()
